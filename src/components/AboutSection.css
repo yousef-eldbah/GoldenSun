@@ -1,0 +1,227 @@
+/* ============================================
+   About Us Section — Pixel-perfect Figma Recreation
+   ============================================ */
+
+.about-section {
+  position: relative;
+  width: 100%;
+  padding: 90px 0 100px;
+  background-color: #ffffff;
+  overflow: hidden;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* Decorative leaves in top right corner (lowered down) */
+.about-decor-leaves {
+  position: absolute;
+  top: 35px;
+  right: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.about-leaves-img {
+  width: 240px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Top Centered Header */
+.about-top-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 28px;
+}
+
+/* Main Container */
+.about-container {
+  position: relative;
+  z-index: 10;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* Two-column grid */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* Left Image Column */
+.about-image-column {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.about-image-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  overflow: visible;
+}
+
+.about-main-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* Right Content Column */
+.about-content-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Badge: Leaf SVG + ABOUT US (Larger Title) */
+.about-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #228731;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.about-badge-leaf {
+  flex-shrink: 0;
+}
+
+/* Title */
+.about-title {
+  font-family: var(--font-vidaloka), 'Vidaloka', Georgia, 'Times New Roman', serif;
+  font-size: 46px;
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  margin: 0 0 20px 0;
+  color: #1a1917;
+}
+
+.about-title-dark {
+  color: #1a1917;
+}
+
+.about-title-green {
+  color: #228731;
+}
+
+/* Description */
+.about-description {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #66635a;
+  max-width: 500px;
+  margin: 0 0 32px 0;
+  font-weight: 400;
+}
+
+/* Action Row */
+.about-action-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.about-btn-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 34px;
+  background-color: #228731;
+  color: #ffffff;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 30px;
+  box-shadow: 0 4px 14px rgba(34, 135, 49, 0.35);
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.about-btn-cta:hover {
+  background-color: #1d7529;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(34, 135, 49, 0.45);
+}
+
+.about-btn-cta:active {
+  transform: translateY(0);
+}
+
+.about-orange-arrow {
+  flex-shrink: 0;
+  animation: arrowPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes arrowPulse {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(4px);
+  }
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .about-section {
+    padding: 60px 0;
+  }
+
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .about-image-column {
+    justify-content: center;
+  }
+
+  .about-image-wrapper {
+    max-width: 100%;
+  }
+
+  .about-title {
+    font-size: 36px;
+  }
+
+  .about-decor-leaves {
+    width: 160px;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-container {
+    padding: 0 20px;
+  }
+
+  .about-title {
+    font-size: 30px;
+  }
+
+  .about-description {
+    font-size: 14px;
+  }
+
+  .about-action-row {
+    flex-wrap: wrap;
+  }
+
+  .about-decor-leaves {
+    width: 120px;
+    top: -5px;
+  }
+}

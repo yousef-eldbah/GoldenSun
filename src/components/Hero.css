@@ -1,0 +1,359 @@
+/* ============================================
+   Hero Section — Pixel-perfect Figma Recreation
+   ============================================ */
+
+/* Main Section */
+.hero-section {
+  position: relative;
+  width: 100%;
+  min-height: 680px;
+  background-color: #ffd868;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Background Graphic (Desktop) */
+.hero-bg-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-bg-image {
+  object-fit: cover;
+  object-position: center right;
+  width: 100%;
+  height: 100%;
+}
+
+/* Mobile Image (Hidden on Desktop) */
+.hero-mobile-img-wrapper {
+  display: none;
+}
+
+/* Content Container */
+.hero-container {
+  position: relative;
+  z-index: 10;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 60px 40px 80px;
+}
+
+/* Left Content Area */
+.hero-content {
+  max-width: 620px;
+}
+
+/* Title */
+.hero-title {
+  font-family: var(--font-vidaloka), 'Vidaloka', Georgia, 'Times New Roman', serif;
+  font-size: 58px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 20px 0;
+  color: #1a1917;
+}
+
+.hero-title-green {
+  color: #228731;
+}
+
+.hero-title-dark {
+  color: #1a1917;
+}
+
+/* SVG icon wrapper at the end of 'Worldwide' (after letter 'e') */
+.hero-e-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* SVG icon on Desktop - moved slightly up */
+.hero-d-svg {
+  position: absolute;
+  top: -48px;
+  right: -32px;
+  width: 36px;
+  height: 28px;
+  pointer-events: none;
+  animation: leafSlightFloat 3s ease-in-out infinite alternate;
+}
+
+@keyframes leafSlightFloat {
+  0% {
+    transform: translateY(0) rotate(0deg);
+  }
+  100% {
+    transform: translateY(-2px) rotate(4deg);
+  }
+}
+
+/* Subtitle */
+.hero-subtitle {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #555248;
+  max-width: 540px;
+  margin: 0 0 36px 0;
+  font-weight: 400;
+}
+
+.hero-subtitle-brand {
+  font-weight: 700;
+  color: #228731;
+  letter-spacing: 0.04em;
+}
+
+/* CTA Buttons */
+.hero-ctas {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.hero-btn-desktop-text {
+  display: inline;
+}
+
+.hero-btn-mobile-text {
+  display: none;
+}
+
+.hero-btn-quote {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 32px;
+  background-color: #228731;
+  color: #ffffff;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 30px;
+  box-shadow: 0 4px 14px rgba(34, 135, 49, 0.35);
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.hero-btn-quote:hover {
+  background-color: #1d7529;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(34, 135, 49, 0.45);
+}
+
+.hero-btn-quote:active {
+  transform: translateY(0);
+}
+
+.hero-btn-contact {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 32px;
+  background-color: #1a1917;
+  color: #ffffff;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 30px;
+  box-shadow: 0 4px 14px rgba(26, 25, 23, 0.25);
+  transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.hero-btn-contact:hover {
+  background-color: #33312c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(26, 25, 23, 0.35);
+}
+
+.hero-btn-contact:active {
+  transform: translateY(0);
+}
+
+/* Stats Bar Container */
+.hero-stats-bar {
+  display: inline-flex;
+  align-items: center;
+  background: #ffffff;
+  border: 2px solid #228731;
+  border-radius: 50px;
+  padding: 12px 28px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  gap: 24px;
+}
+
+.hero-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-stat-num {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #1a1917;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.hero-stat-label {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: #555248;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.hero-stat-divider {
+  width: 1px;
+  height: 28px;
+  background-color: #e2dfd7;
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+  .hero-title {
+    font-size: 48px;
+  }
+}
+
+@media (max-width: 992px) {
+  .hero-section {
+    min-height: auto;
+  }
+
+  .hero-container {
+    padding: 40px 24px;
+  }
+
+  .hero-title {
+    font-size: 42px;
+  }
+
+  .hero-stats-bar {
+    flex-wrap: wrap;
+    border-radius: 24px;
+    padding: 16px 20px;
+    gap: 16px;
+  }
+
+  .hero-stat-divider {
+    display: none;
+  }
+}
+
+/* Mobile Layout - Exact match to Figma heroMobile */
+@media (max-width: 640px) {
+  .hero-section {
+    background-color: #ffffff;
+    padding: 24px 0 0 0;
+    min-height: auto;
+    overflow: hidden;
+  }
+
+  .hero-bg-wrapper {
+    display: none;
+  }
+
+  .hero-container {
+    padding: 16px 20px 0 20px;
+  }
+
+  .hero-content {
+    max-width: 100%;
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .hero-title {
+    font-size: 32px;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  /* SVG positioned at the end of letter 'e' on mobile */
+  .hero-d-svg {
+    top: -8px;
+    right: -24px;
+    width: 28px;
+    height: 22px;
+  }
+
+  .hero-subtitle {
+    font-size: 13px;
+    line-height: 1.55;
+    text-align: center;
+    max-width: 320px;
+    margin: 0 auto 28px auto;
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    width: 100%;
+  }
+
+  .hero-btn-desktop-text {
+    display: none;
+  }
+
+  .hero-btn-mobile-text {
+    display: inline;
+  }
+
+  .hero-btn-quote,
+  .hero-btn-contact {
+    width: 100%;
+    max-width: 280px;
+    padding: 14px 24px;
+    font-size: 17px;
+    text-align: center;
+    border-radius: 30px;
+  }
+
+  .hero-stats-bar {
+    display: none;
+  }
+
+  /* Mobile Produce Arc Image — Full screen width (0 side gaps) */
+  .hero-mobile-img-wrapper {
+    display: block;
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    margin-top: 12px;
+    margin-bottom: 0;
+    line-height: 0;
+    overflow: hidden;
+  }
+
+  .hero-mobile-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+}

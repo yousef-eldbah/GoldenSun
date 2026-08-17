@@ -1,0 +1,312 @@
+/* ============================================
+   Why Choose Page — Standalone
+   ============================================ */
+
+.why-page-main {
+  width: 100%;
+  background-color: #ffffff;
+  padding: 40px 0 100px;
+}
+
+.why-page-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* Title */
+.why-main-title {
+  font-family: var(--font-vidaloka), 'Vidaloka', Georgia, 'Times New Roman', serif;
+  font-size: 44px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 36px 0;
+  letter-spacing: -0.01em;
+}
+
+.why-title-dark {
+  color: #1a1917;
+}
+
+.why-title-green {
+  color: #228731;
+}
+
+/* Banner — clean image, no overlay text */
+.why-banner-card {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 54px;
+}
+
+.why-banner-bg {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: 100%;
+}
+
+.why-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.55) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.why-banner-overlay-text {
+  font-family: var(--font-source-sans), 'Source Sans 3', 'Source Sans Pro', system-ui, sans-serif;
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+/* Badge */
+.why-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #228731;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 48px;
+}
+
+.why-badge-icon {
+  flex-shrink: 0;
+}
+
+/* Zig-Zag Blocks */
+.why-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 72px;
+  margin-bottom: 80px;
+}
+
+.why-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.why-block-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Number Badge */
+.why-number-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.why-number-badge {
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background-color: #68c27b;
+  opacity: 0.85;
+  z-index: 1;
+}
+
+.why-number-text {
+  position: relative;
+  z-index: 2;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 40px;
+  font-weight: 900;
+  color: #1a1917;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.why-block-title {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a1917;
+  margin: 0 0 14px 0;
+  line-height: 1.3;
+}
+
+.why-block-desc {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #77746c;
+  max-width: 480px;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Image Wrapper — NO white bg, NO shadow, NO border-radius wrapper */
+.why-block-img-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  overflow: visible;
+}
+
+.why-block-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* Certificates inside Why Choose page */
+.why-cert-section {
+  position: relative;
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 40px;
+}
+
+.why-cert-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.why-cert-card {
+  display: grid;
+  align-items: center;
+  padding: 36px 48px;
+  border: 2px solid #228731;
+  border-radius: 20px;
+  background-color: #ffffff;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.why-cert-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(34, 135, 49, 0.1);
+}
+
+.why-cert-card-normal {
+  grid-template-columns: 1fr 240px;
+  gap: 40px;
+}
+
+.why-cert-card-reverse {
+  grid-template-columns: 240px 1fr;
+  gap: 40px;
+}
+
+.why-cert-card-title {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #1a1917;
+  margin: 0 0 12px 0;
+}
+
+.why-cert-card-desc {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #77746c;
+  margin: 0;
+  max-width: 640px;
+}
+
+.why-cert-card-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .why-block {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  .why-block-content {
+    order: 1;
+  }
+
+  .why-block-img-wrapper {
+    order: 2;
+    max-width: 100%;
+  }
+
+  .why-banner-card {
+    height: 200px;
+  }
+
+  .why-main-title {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 860px) {
+  .why-cert-card-normal,
+  .why-cert-card-reverse {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 28px 32px;
+  }
+
+  .why-cert-card-reverse .why-cert-card-logo {
+    grid-row: 2;
+  }
+
+  .why-cert-card-reverse .why-cert-card-content {
+    grid-row: 1;
+  }
+
+  .why-cert-card-title {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .why-page-container {
+    padding: 0 20px;
+  }
+
+  .why-banner-card {
+    height: 160px;
+    border-radius: 16px;
+  }
+
+  .why-main-title {
+    font-size: 26px;
+  }
+
+  .why-number-text {
+    font-size: 32px;
+  }
+
+  .why-block-title {
+    font-size: 18px;
+  }
+
+  .why-cert-card {
+    padding: 20px 24px;
+  }
+}

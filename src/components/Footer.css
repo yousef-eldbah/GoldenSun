@@ -1,0 +1,549 @@
+/* ============================================
+   Footer — Pixel-perfect Figma Recreation
+   ============================================ */
+
+.footer-outer {
+  position: relative;
+  width: 100%;
+  margin-top: 100px;
+}
+
+/* 1. Floating Newsletter Container & Card */
+.footer-newsletter-container {
+  position: absolute;
+  top: -75px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1240px;
+  padding: 0 40px;
+  z-index: 10;
+}
+
+.footer-newsletter-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 36px 48px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  border: 1px solid #eaeaea;
+}
+
+.footer-newsletter-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-newsletter-title {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #1a1917;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px 0;
+}
+
+.footer-newsletter-desc {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 13.5px;
+  color: #88857c;
+  max-width: 440px;
+  margin: 0;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+/* Newsletter Form & Input Group */
+.footer-newsletter-form {
+  flex-shrink: 0;
+}
+
+.footer-input-group {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1.5px solid #dcdcdc;
+  border-radius: 50px;
+  padding: 4px 4px 4px 20px;
+  width: 420px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.footer-input-group:focus-within {
+  border-color: #228731;
+  box-shadow: 0 0 0 3px rgba(34, 135, 49, 0.12);
+}
+
+.footer-input-field {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  color: #1a1917;
+}
+
+.footer-input-field::placeholder {
+  color: #a0a0a0;
+}
+
+.footer-subscribe-btn {
+  background-color: #228731;
+  color: #ffffff;
+  border: none;
+  border-radius: 40px;
+  padding: 12px 28px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.footer-subscribe-btn:hover {
+  background-color: #1c7229;
+  transform: translateY(-1px);
+}
+
+/* 2. Main Dark Green Footer Section */
+.footer-main-area {
+  position: relative;
+  width: 100%;
+  background-color: #002D00;
+  color: #ffffff;
+  padding: 130px 0 60px;
+  overflow: hidden;
+}
+
+/* Decorative doodle background images — full height, rich opacity, spanning left & right columns */
+.footer-bg-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.85;
+  width: 480px;
+}
+
+.footer-bg-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.85;
+  width: 480px;
+}
+
+.footer-bg-left .footer-bg-corner-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left center;
+}
+
+.footer-bg-right .footer-bg-corner-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: right center;
+}
+
+.footer-content-wrapper {
+  position: relative;
+  z-index: 3;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* 4 Main Columns Grid */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2.2fr 1fr 1fr 1.8fr;
+  gap: 48px;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Brand Column */
+.footer-logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.footer-logo-icon {
+  width: 44px;
+  height: auto;
+  object-fit: contain;
+}
+
+.footer-logo-text {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  line-height: 1;
+}
+
+.footer-brand-text {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  line-height: 1.65;
+  color: rgba(255, 255, 255, 0.78);
+  margin: 0 0 24px 0;
+  max-width: 340px;
+}
+
+/* Social Media Icons */
+.footer-social-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-social-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  text-decoration: none;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-social-icon:hover {
+  background-color: #228731;
+  transform: translateY(-2px);
+}
+
+/* Column Headers with green gradient accent line underneath */
+.footer-col-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  position: relative;
+}
+
+.footer-col-header::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 75px;
+  height: 2.5px;
+  background: linear-gradient(90deg, #228731 0%, rgba(34, 135, 49, 0.1) 100%);
+  border-radius: 2px;
+}
+
+.footer-leaf-icon {
+  flex-shrink: 0;
+}
+
+.footer-col-title {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* Links List */
+.footer-links-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-links-list a {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.footer-links-list a:hover {
+  color: #ffffff;
+  transform: translateX(3px);
+}
+
+.footer-arrow {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+}
+
+/* Contact List */
+.footer-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.footer-contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.footer-contact-badge {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.footer-contact-text {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.5;
+}
+
+.footer-contact-lines {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.82);
+  line-height: 1.5;
+}
+
+/* ============================================
+   Responsive Styles — Tablet & Mobile
+   ============================================ */
+
+@media (max-width: 992px) {
+  .footer-outer {
+    margin-top: 90px;
+  }
+
+  .footer-newsletter-container {
+    top: -85px;
+    padding: 0 30px;
+  }
+
+  .footer-newsletter-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 32px 36px;
+    border-radius: 18px;
+  }
+
+  .footer-newsletter-form {
+    width: 100%;
+  }
+
+  .footer-input-group {
+    width: 100%;
+  }
+
+  .footer-main-area {
+    padding-top: 210px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .footer-bg-left {
+    width: 320px;
+    opacity: 0.5;
+  }
+
+  .footer-bg-right {
+    width: 300px;
+    opacity: 0.5;
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-outer {
+    margin-top: 80px;
+  }
+
+  .footer-newsletter-container {
+    top: -70px;
+    padding: 0 16px;
+  }
+
+  .footer-newsletter-card {
+    padding: 24px 20px;
+    border-radius: 16px;
+    gap: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  }
+
+  .footer-newsletter-title {
+    font-size: 19px;
+    margin-bottom: 6px;
+  }
+
+  .footer-newsletter-desc {
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+
+  .footer-newsletter-form {
+    width: 100%;
+  }
+
+  .footer-input-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border: none;
+    padding: 0;
+    background: transparent;
+    gap: 10px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .footer-input-group:focus-within {
+    box-shadow: none;
+  }
+
+  .footer-input-field {
+    width: 100%;
+    height: 48px;
+    background-color: #f5f7f5;
+    border: 1.5px solid #e0e6e1;
+    border-radius: 12px;
+    padding: 0 16px;
+    font-size: 13.5px;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .footer-input-field:focus {
+    border-color: #228731;
+    background-color: #ffffff;
+  }
+
+  .footer-subscribe-btn {
+    width: 100%;
+    height: 48px;
+    border-radius: 12px;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .footer-main-area {
+    padding-top: 240px;
+    padding-bottom: 50px;
+  }
+
+  .footer-content-wrapper {
+    padding: 0 20px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .footer-logo-wrapper {
+    margin-bottom: 14px;
+    gap: 10px;
+  }
+
+  .footer-logo-icon {
+    width: 38px;
+  }
+
+  .footer-logo-text {
+    font-size: 24px;
+  }
+
+  .footer-brand-text {
+    font-size: 12.5px;
+    max-width: 100%;
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+
+  .footer-col-header {
+    margin-bottom: 20px;
+  }
+
+  .footer-col-title {
+    font-size: 15px;
+  }
+
+  .footer-col-header::after {
+    width: 60px;
+    height: 2px;
+    bottom: -8px;
+  }
+
+  .footer-links-list {
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .footer-links-list a {
+    font-size: 13px;
+  }
+
+  .footer-contact-list {
+    gap: 14px;
+    margin-top: 8px;
+  }
+
+  .footer-contact-text,
+  .footer-contact-lines {
+    font-size: 12.5px;
+  }
+
+  .footer-bg-left {
+    width: 220px;
+    opacity: 0.25;
+  }
+
+  .footer-bg-right {
+    width: 200px;
+    opacity: 0.25;
+  }
+}

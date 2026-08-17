@@ -1,0 +1,210 @@
+/* ============================================
+   Why Choose Us Section — Home Page Preview
+   ============================================ */
+
+.why-sec-home {
+  position: relative;
+  width: 100%;
+  padding: 80px 0 90px;
+  background-color: #fafcf9;
+  border-bottom: 1px solid #eef2eb;
+}
+
+.why-sec-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* Header */
+.why-sec-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 50px;
+}
+
+.why-sec-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: #228731;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.why-sec-title {
+  font-family: var(--font-vidaloka), 'Vidaloka', Georgia, serif;
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 12px 0;
+  color: #1a1917;
+}
+
+.why-sec-title-dark {
+  color: #1a1917;
+}
+
+.why-sec-title-green {
+  color: #228731;
+  margin-left: 8px;
+}
+
+.why-sec-subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #66635a;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* 3 Cards Grid */
+.why-sec-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.why-sec-card {
+  background: #ffffff;
+  border: 1px solid #e7efe5;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.why-sec-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 36px rgba(34, 135, 49, 0.12);
+  border-color: #228731;
+}
+
+.why-sec-card-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background-color: #f4f8f3;
+  overflow: hidden;
+}
+
+.why-sec-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.why-sec-card:hover .why-sec-card-img {
+  transform: scale(1.05);
+}
+
+.why-sec-card-number {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #228731;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(34, 135, 49, 0.4);
+}
+
+.why-sec-card-body {
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.why-sec-card-title {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a1917;
+  margin: 0 0 12px 0;
+  line-height: 1.35;
+}
+
+.why-sec-card-desc {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #66635a;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Footer CTA Button */
+.why-sec-footer-cta {
+  display: flex;
+  justify-content: center;
+}
+
+.why-sec-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 36px;
+  background-color: #228731;
+  color: #ffffff;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 35px;
+  box-shadow: 0 6px 18px rgba(34, 135, 49, 0.3);
+  transition: all 0.25s ease;
+}
+
+.why-sec-btn:hover {
+  background-color: #1b6d27;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(34, 135, 49, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .why-sec-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .why-sec-title {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .why-sec-container {
+    padding: 0 20px;
+  }
+
+  .why-sec-title {
+    font-size: 26px;
+  }
+
+  .why-sec-btn {
+    padding: 14px 28px;
+    font-size: 14px;
+    width: 100%;
+    justify-content: center;
+  }
+}

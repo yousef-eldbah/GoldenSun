@@ -1,0 +1,821 @@
+/* ============================================
+   Dedicated About Page Styles & Timeline Section
+   ============================================ */
+
+.about-page-main {
+  width: 100%;
+  background-color: #ffffff;
+  padding: 40px 0 100px;
+}
+
+.about-page-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+/* Top Banner Card (Clean image without overlay text) */
+.about-banner-card {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 64px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.about-banner-bg {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: 100%;
+}
+
+.about-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.6) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  text-align: center;
+  z-index: 2;
+}
+
+.about-main-title {
+  font-family: var(--font-vidaloka), 'Vidaloka', Georgia, 'Times New Roman', serif;
+  font-size: 44px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 36px 0;
+  letter-spacing: -0.01em;
+}
+
+.about-banner-text {
+  font-family: var(--font-source-sans), 'Source Sans 3', 'Source Sans Pro', system-ui, sans-serif;
+  color: #ffffff;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
+/* Our Story Section */
+.ourstory-section {
+  position: relative;
+  width: 100%;
+  margin-bottom: 80px;
+}
+
+.ourstory-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+/* Left Content Column */
+.ourstory-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ourstory-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #228731;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.ourstory-badge-icon {
+  flex-shrink: 0;
+}
+
+.ourstory-title {
+  font-family: var(--font-vidaloka), 'Vidaloka', Georgia, 'Times New Roman', serif;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.22;
+  color: #1a1917;
+  letter-spacing: -0.01em;
+  margin: 0 0 20px 0;
+}
+
+.ourstory-description {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: #77746c;
+  max-width: 520px;
+  margin: 0 0 32px 0;
+  font-weight: 400;
+}
+
+/* Feature List */
+.ourstory-features {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+.ourstory-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ourstory-feature-icon-wrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #f0faf2;
+  border: 1.5px solid #228731;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #228731;
+  flex-shrink: 0;
+}
+
+.ourstory-feature-label {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1917;
+}
+
+/* Right Image Column (Ourstory.svg) */
+.ourstory-image-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  overflow: hidden;
+  border-top-left-radius: 140px;
+  border-top-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+
+.ourstory-main-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* ============================================
+   Our Journey Of Success — Vertical Timeline Section
+   ============================================ */
+
+.journey-section {
+  position: relative;
+  width: 100%;
+  padding-top: 60px;
+  margin-bottom: 100px;
+}
+
+/* Header */
+.journey-header {
+  text-align: center;
+  margin-bottom: 64px;
+}
+
+.journey-title {
+  font-family: var(--font-vidaloka), 'Vidaloka', Georgia, 'Times New Roman', serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #1a1917;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px 0;
+}
+
+.journey-subtitle {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #88857c;
+  margin: 0 0 20px 0;
+}
+
+/* Decorative Line & Dot */
+.journey-decor-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 220px;
+  margin: 0 auto;
+}
+
+.journey-line-side {
+  height: 1.5px;
+  flex: 1;
+  background: linear-gradient(90deg, transparent, #228731, transparent);
+}
+
+.journey-dot-outer {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #228731;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.journey-dot-inner {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #ffffff;
+}
+
+/* Timeline Layout */
+.journey-timeline {
+  position: relative;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* Center Vertical Axis */
+.journey-axis {
+  position: absolute;
+  left: 50%;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background-color: #d1e2d3;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+/* Timeline Rows */
+.journey-timeline-row {
+  display: grid;
+  grid-template-columns: 1fr 50px 1fr;
+  align-items: center;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.journey-row-left .journey-card {
+  grid-column: 1;
+}
+
+.journey-row-left .journey-node-dot {
+  grid-column: 2;
+}
+
+.journey-row-left .journey-spacer {
+  grid-column: 3;
+}
+
+.journey-row-right .journey-spacer {
+  grid-column: 1;
+}
+
+.journey-row-right .journey-node-dot {
+  grid-column: 2;
+}
+
+.journey-row-right .journey-card {
+  grid-column: 3;
+}
+
+/* Milestone Cards */
+.journey-card {
+  padding: 24px 28px;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.journey-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
+}
+
+/* Green Card Style (2005, 2014, 2024) */
+.journey-card-green {
+  background-color: #228731;
+  color: #ffffff;
+}
+
+.journey-icon-gold {
+  color: #ffd868;
+}
+
+/* White Card Style (2008, 2011, 2019, 2022, 2026) */
+.journey-card-white {
+  background-color: #ffffff;
+  color: #1a1917;
+  border: 1.5px solid #eaf3eb;
+}
+
+.journey-icon-green {
+  color: #228731;
+}
+
+/* Card Header */
+.journey-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.journey-card-icon-box {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.journey-card-year {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.journey-card-green .journey-card-year {
+  color: #ffd868;
+}
+
+.journey-card-white .journey-card-year {
+  color: #228731;
+}
+
+.journey-card-title {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.journey-card-green .journey-card-title {
+  color: #ffffff;
+}
+
+.journey-card-white .journey-card-title {
+  color: #1a1917;
+}
+
+/* Card Description */
+.journey-card-desc {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.journey-card-green .journey-card-desc {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.journey-card-white .journey-card-desc {
+  color: #77746c;
+}
+
+/* Center Node Dot */
+.journey-node-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin: 0 auto;
+  z-index: 3;
+  flex-shrink: 0;
+}
+
+.journey-node-green {
+  background-color: #ffd868;
+  border: 3px solid #228731;
+}
+
+.journey-node-white {
+  background-color: #ffffff;
+  border: 3px solid #228731;
+}
+
+/* ============================================
+   Why Choose GOLDEN SUN Section
+   ============================================ */
+
+.whychoose-section {
+  position: relative;
+  width: 100%;
+  padding-top: 40px;
+}
+
+/* Main Title */
+.whychoose-main-title {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: 44px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 36px 0;
+  letter-spacing: -0.01em;
+}
+
+.whychoose-title-dark {
+  color: #1a1917;
+}
+
+.whychoose-title-green {
+  color: #228731;
+}
+
+/* Banner Card (why-sec.svg) */
+.whychoose-banner-card {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 54px;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.1);
+}
+
+.whychoose-banner-bg {
+  object-fit: cover;
+  object-position: center;
+  width: 100%;
+  height: 100%;
+}
+
+.whychoose-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.65) 100%);
+  z-index: 2;
+}
+
+.whychoose-banner-text {
+  position: relative;
+  z-index: 5;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: center;
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+  margin: 0;
+  padding: 0 24px;
+}
+
+/* Badge: Why Choose US */
+.whychoose-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #228731;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 48px;
+}
+
+.whychoose-badge-icon {
+  flex-shrink: 0;
+}
+
+/* 3 Zig-Zag Feature Blocks */
+.whychoose-blocks {
+  display: flex;
+  flex-direction: column;
+  gap: 72px;
+}
+
+.whychoose-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+/* Block Content */
+.whychoose-block-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Number Badge (01, 02, 03) */
+.whychoose-number-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.whychoose-number-badge {
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background-color: #68c27b;
+  opacity: 0.85;
+  z-index: 1;
+}
+
+.whychoose-number-text {
+  position: relative;
+  z-index: 2;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 40px;
+  font-weight: 900;
+  color: #1a1917;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.whychoose-block-title {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a1917;
+  margin: 0 0 14px 0;
+  line-height: 1.3;
+}
+
+.whychoose-block-desc {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #77746c;
+  max-width: 480px;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Block Image Wrapper (Curved top-left corner) */
+.whychoose-block-img-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  overflow: hidden;
+  border-top-left-radius: 140px;
+  border-top-right-radius: 24px;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+
+.whychoose-block-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .about-banner-card {
+    height: 220px;
+  }
+
+  .ourstory-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .ourstory-image-wrapper {
+    max-width: 100%;
+  }
+
+  .ourstory-title {
+    font-size: 30px;
+  }
+
+  .whychoose-block {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .whychoose-block-reverse .whychoose-block-img-wrapper {
+    grid-row: 2;
+  }
+
+  .whychoose-block-reverse .whychoose-block-content {
+    grid-row: 1;
+  }
+
+  .whychoose-block-img-wrapper {
+    max-width: 100%;
+  }
+
+  .whychoose-banner-text {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .journey-axis {
+    left: 20px;
+  }
+
+  .journey-timeline-row {
+    grid-template-columns: 40px 1fr;
+    margin-bottom: 32px;
+  }
+
+  .journey-row-left .journey-card,
+  .journey-row-right .journey-card {
+    grid-column: 2;
+  }
+
+  .journey-row-left .journey-node-dot,
+  .journey-row-right .journey-node-dot {
+    grid-column: 1;
+  }
+
+  .journey-spacer {
+    display: none;
+  }
+
+  .journey-title {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-page-container {
+    padding: 0 20px;
+  }
+
+  .about-banner-card {
+    height: 180px;
+    border-radius: 16px;
+  }
+
+  .ourstory-title {
+    font-size: 26px;
+  }
+
+  .journey-card {
+    padding: 18px 20px;
+  }
+
+  .journey-card-title {
+    font-size: 15px;
+  }
+
+  .journey-card-desc {
+    font-size: 13px;
+  }
+
+  .whychoose-main-title {
+    font-size: 30px;
+  }
+
+  .whychoose-banner-card {
+    height: 180px;
+  }
+
+  .whychoose-banner-text {
+    font-size: 18px;
+  }
+
+  .whychoose-number-text {
+    font-size: 32px;
+  }
+
+  .whychoose-block-title {
+    font-size: 18px;
+  }
+}
+
+/* ============================================
+   About Our Certificate Section
+   ============================================ */
+
+.cert-section {
+  position: relative;
+  width: 100%;
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+
+.cert-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #228731;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+.cert-badge-icon {
+  flex-shrink: 0;
+}
+
+/* 4 Large Certificate Cards */
+.cert-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.cert-card {
+  display: grid;
+  align-items: center;
+  padding: 36px 48px;
+  border: 2px solid #228731;
+  border-radius: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 10px 28px rgba(34, 135, 49, 0.05);
+  transition: transform 0.25 ease, box-shadow 0.25s ease;
+}
+
+.cert-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(34, 135, 49, 0.1);
+}
+
+.cert-card-normal {
+  grid-template-columns: 1fr 240px;
+  gap: 40px;
+}
+
+.cert-card-reverse {
+  grid-template-columns: 240px 1fr;
+  gap: 40px;
+}
+
+.cert-card-title {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #1a1917;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.01em;
+}
+
+.cert-card-desc {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: #77746c;
+  margin: 0;
+  max-width: 640px;
+}
+
+.cert-card-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+@media (max-width: 860px) {
+  .cert-card-normal,
+  .cert-card-reverse {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 28px 32px;
+  }
+
+  .cert-card-reverse .cert-card-logo {
+    grid-row: 2;
+  }
+
+  .cert-card-reverse .cert-card-content {
+    grid-row: 1;
+  }
+
+  .cert-card-title {
+    font-size: 20px;
+  }
+}
+

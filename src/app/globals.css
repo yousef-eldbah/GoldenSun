@@ -1,26 +1,68 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Sun Golden Premium Palette */
+    --sg-white: #FEFDFB;
+    --sg-cream: #FAF8F4;
+    --sg-sand: #F0EDE6;
+    --sg-stone: #D6D0C4;
+    --sg-warm-gray: #A39E93;
+    --sg-charcoal: #2C2A25;
+    --sg-black: #1A1917;
+
+    /* Brand Accent */
+    --sg-gold: #C8922A;
+    --sg-gold-light: #E5B94E;
+    --sg-gold-dark: #9E7221;
+
+    /* Nature Greens */
+    --sg-forest: #1B4332;
+    --sg-leaf: #2D6A4F;
+    --sg-sage: #52796F;
+    --sg-mint: #95D5B2;
+
+    /* Functional */
+    --sg-danger: #C1292E;
+    --sg-info: #3A7CA5;
+    --sg-success: #386641;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--sg-white);
+    color: var(--sg-charcoal);
+    font-family: var(--font-source-sans), 'Source Sans 3', 'Source Sans Pro', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-serif {
+    font-family: var(--font-vidaloka), 'Vidaloka', Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background-color: var(--sg-gold);
+    color: var(--sg-white);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Premium scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--sg-cream);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--sg-stone);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sg-gold);
 }
