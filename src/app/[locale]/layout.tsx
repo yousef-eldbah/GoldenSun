@@ -1,6 +1,6 @@
 import React from 'react';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { locales } from '@/i18n/config';
 import { RFQBasketProvider } from '@/context/RFQBasketContext';
@@ -21,14 +21,17 @@ export default async function LocaleLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: Promise<any>;
+  params: Promise<{ locale: string }>;
 }) {
   const resolvedParams = await params;
-  const locale = resolvedParams.locale as Locale;
+  const locale = (resolvedParams?.locale || 'en') as Locale;
 
   if (!locales.includes(locale as any)) {
     notFound();
   }
+
+  // Enable static rendering and provide locale context to next-intl server methods
+  setRequestLocale(locale);
 
   const messages = await getMessages();
 

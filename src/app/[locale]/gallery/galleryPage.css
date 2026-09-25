@@ -1,0 +1,128 @@
+/* ─── Dedicated Gallery Page Styles ─────────────────────────────────── */
+
+.gallery-page-main {
+  min-height: 100vh;
+  background-color: var(--sg-white, #fafdfa);
+}
+
+.gallery-page-hero {
+  position: relative;
+  background: radial-gradient(circle at 50% 0%, #154c22 0%, #0c3314 60%, #061c0b 100%);
+  padding: 5rem 1.5rem 4.5rem;
+  color: #ffffff;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .gallery-page-hero {
+    padding: 6.5rem 2rem 5.5rem;
+  }
+}
+
+.gallery-page-hero-container {
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.gallery-page-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  background: rgba(34, 135, 49, 0.25);
+  border: 1px solid rgba(34, 135, 49, 0.4);
+  color: #4ade80;
+  font-size: 0.825rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.gallery-page-hero-title {
+  font-family: var(--font-vidaloka), serif;
+  font-size: 2.25rem;
+  line-height: 1.2;
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .gallery-page-hero-title {
+    font-size: 3.25rem;
+  }
+}
+
+.gallery-page-hero-subtitle {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+}
+
+@media (min-width: 768px) {
+  .gallery-page-hero-subtitle {
+    font-size: 1.15rem;
+  }
+}
+
+/* ─── Operational Highlights ────────────────────────────────────────────── */
+.gallery-highlights-section {
+  max-width: 1320px;
+  margin: -2rem auto 0;
+  padding: 0 1.5rem;
+  position: relative;
+  z-index: 10;
+}
+
+.gallery-highlights-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .gallery-highlights-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.gallery-highlight-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(18, 54, 25, 0.08);
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-highlight-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 36px -12px rgba(18, 54, 25, 0.16);
+}
+
+.gallery-highlight-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(34, 135, 49, 0.1);
+  color: #228731;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gallery-highlight-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.35rem;
+}
+
+.gallery-highlight-desc {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: #64748b;
+}

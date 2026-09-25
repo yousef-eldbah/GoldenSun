@@ -12,52 +12,33 @@ export function useProducts(categoryId?: string) {
 
   useEffect(() => {
     let isMounted = true;
-    setIsLoading(true);
 
     const fetchProducts = async () => {
       try {
+        setIsLoading(true);
         const repoData = categoryId
           ? await services.productRepository.getByCategory(categoryId)
           : await services.productRepository.getAll();
 
-        // Read local custom products saved from Admin Dashboard (for instant offline/demo sync)
-        let localCustom: Product[] = [];
-        if (typeof window !== 'undefined') {
-          try {
-            const saved = localStorage.getItem('sun_golden_custom_products');
-            if (saved) {
-              localCustom = JSON.parse(saved);
-            }
-          } catch {
-            // Ignore parse errors
-          }
-        }
-
-        // Combine repository data (Supabase) + local custom products from Admin Dashboard
-        const combinedMap = new Map<string, Product>();
-
-        // 1. Add local custom products from Admin
-        localCustom.forEach((p) => combinedMap.set(p.id, p));
-
-        // 2. Add Supabase repository database products
-        if (repoData && repoData.length > 0) {
-          repoData.forEach((p) => combinedMap.set(p.id, p));
-        }
-
-        let resultList = Array.from(combinedMap.values());
-
-        if (categoryId) {
-          resultList = resultList.filter((p) => p.category_id === categoryId);
-        }
-
         if (isMounted) {
-          setProducts(resultList);
+          if (repoData && repoData.length > 0) {
+            setProducts(repoData);
+          } else {
+            // If repository is empty / offline demo fallback
+            const filtered = categoryId
+              ? mockProducts.filter((p) => p.category_id === categoryId)
+              : mockProducts;
+            setProducts(filtered);
+          }
           setError(null);
         }
       } catch (err) {
         if (isMounted) {
           setError(err as Error);
-          setProducts([]);
+          const filtered = categoryId
+            ? mockProducts.filter((p) => p.category_id === categoryId)
+            : mockProducts;
+          setProducts(filtered);
         }
       } finally {
         if (isMounted) setIsLoading(false);
@@ -66,17 +47,8 @@ export function useProducts(categoryId?: string) {
 
     fetchProducts();
 
-    // Listen to custom storage event for instant tab sync
-    const handleStorageChange = () => fetchProducts();
-    if (typeof window !== 'undefined') {
-      window.addEventListener('sun_golden_products_updated', handleStorageChange);
-    }
-
     return () => {
       isMounted = false;
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('sun_golden_products_updated', handleStorageChange);
-      }
     };
   }, [categoryId]);
 

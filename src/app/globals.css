@@ -66,3 +66,58 @@
 ::-webkit-scrollbar-thumb:hover {
   background: var(--sg-gold);
 }
+
+/* =========================================================
+   Unified Section Header Standard (Consistent across Home)
+   ========================================================= */
+.sg-section-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 36px;
+}
+
+.sg-section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #15803d;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: #eef7ed;
+  padding: 6px 16px;
+  border-radius: 30px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(21, 128, 61, 0.25);
+}
+
+.sg-section-title {
+  font-family: var(--font-vidaloka), 'Vidaloka', Georgia, serif;
+  font-size: clamp(30px, 4vw, 42px);
+  font-weight: 700;
+  line-height: 1.22;
+  color: #1a1917;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.01em;
+}
+
+.sg-section-title-dark {
+  color: #1a1917;
+}
+
+.sg-section-title-green {
+  color: #228731;
+}
+
+.sg-section-subtitle {
+  font-family: var(--font-source-sans), 'Inter', system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #5c635a;
+  margin: 0 auto;
+  max-width: 640px;
+  font-weight: 400;
+}
+

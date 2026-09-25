@@ -1,0 +1,315 @@
+/* ============================================
+   Clean Dot Grid Seasonal Calendar
+   Ultra-Compact, Scannable & Minimal Indicator Chart
+   ============================================ */
+
+.sg-dot-section {
+  width: 100%;
+  padding: 40px 0 50px;
+  background: linear-gradient(180deg, #ffffff 0%, #fafdfa 50%, #f4f9f3 100%);
+  border-top: 1px solid #eef5ed;
+  border-bottom: 1px solid #eef5ed;
+  position: relative;
+}
+
+.sg-dot-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+
+
+/* Matrix Box */
+.sg-dot-matrix-box {
+  background: #ffffff;
+  border: 1.5px solid #e1ede0;
+  border-radius: 16px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.025);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.sg-dot-scroll-wrap {
+  min-width: 680px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Row */
+.sg-dot-header-row {
+  display: grid;
+  grid-template-columns: 190px repeat(12, 1fr);
+  gap: 2px;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1.5px solid #e5f0e4;
+  margin-bottom: 6px;
+}
+
+.sg-dot-col-title {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 10.5px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #70756d;
+  padding-left: 6px;
+  position: sticky;
+  left: 0;
+  background: #ffffff;
+  z-index: 10;
+}
+
+.sg-dot-month-head {
+  text-align: center;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #66635a;
+  padding: 3px 0;
+  border-radius: 5px;
+}
+
+.sg-dot-month-head.is-current-head {
+  background: #eef7ed;
+  color: #228731;
+  font-weight: 900;
+}
+
+/* Category Group Label */
+.sg-dot-group-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f7faf6;
+  border-left: 3px solid #228731;
+  padding: 4px 8px;
+  border-radius: 0 6px 6px 0;
+  margin: 4px 0;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: #1b3e2b;
+  text-transform: uppercase;
+  position: sticky;
+  left: 0;
+}
+
+/* Product Row (~32px compact height) */
+.sg-dot-row {
+  display: grid;
+  grid-template-columns: 190px repeat(12, 1fr);
+  gap: 2px;
+  align-items: center;
+  height: 32px;
+  border-bottom: 1px solid #f4f8f3;
+  transition: background 0.15s ease;
+}
+
+.sg-dot-row:hover {
+  background: #fbfdfa;
+}
+
+/* Sticky Product Name Cell */
+.sg-dot-prod-cell {
+  position: sticky;
+  left: 0;
+  background: #ffffff;
+  z-index: 5;
+  padding-left: 6px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.sg-dot-row:hover .sg-dot-prod-cell {
+  background: #fbfdfa;
+}
+
+.sg-dot-prod-name {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #1a1917;
+  text-decoration: none;
+  transition: color 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sg-dot-prod-name:hover {
+  color: #228731;
+}
+
+/* Month Dot Cell */
+.sg-dot-cell {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sg-dot-cell.is-current-col {
+  background: rgba(34, 135, 49, 0.04);
+  border-radius: 4px;
+}
+
+/* Active Green Dot Indicator ● */
+.sg-active-dot {
+  width: 9px;
+  height: 9px;
+  background-color: #228731;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px #eef7ed;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.sg-dot-row:hover .sg-active-dot {
+  transform: scale(1.25);
+  background-color: #1b6e27;
+}
+
+/* Off-season Dot Indicator · */
+.sg-off-dot {
+  width: 4px;
+  height: 4px;
+  background-color: #e2e8e1;
+  border-radius: 50%;
+}
+
+/* Footer */
+.sg-dot-footer {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.sg-dot-disclaimer {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  color: #757a71;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sg-dot-cta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.sg-dot-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #ffffff;
+  background: #228731;
+  padding: 6px 14px;
+  border-radius: 16px;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(34, 135, 49, 0.2);
+  transition: all 0.2s ease;
+}
+
+.sg-dot-cta-btn:hover {
+  background: #1b6e27;
+  transform: translateY(-1px);
+}
+
+/* Mobile Swipe Hint */
+.sg-mobile-swipe-hint {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #228731;
+  background: #f0f7ef;
+  border: 1px solid #dceed9;
+  border-radius: 20px;
+  padding: 5px 12px;
+  margin: 0 auto 12px;
+  width: fit-content;
+}
+
+.sg-swipe-icon {
+  font-size: 13px;
+  animation: sgSwipePulse 1.8s infinite ease-in-out;
+}
+
+@keyframes sgSwipePulse {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(3px); }
+}
+
+/* Sticky Column Elevation */
+.sg-dot-prod-cell,
+.sg-dot-col-title {
+  box-shadow: 4px 0 8px -3px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sg-mobile-swipe-hint {
+    display: inline-flex;
+  }
+
+  .sg-dot-matrix-box {
+    margin: 0 -4px;
+    border-radius: 12px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sg-dot-scroll-wrap {
+    min-width: 530px;
+    padding: 10px 8px;
+  }
+
+  .sg-dot-header-row,
+  .sg-dot-row {
+    grid-template-columns: 110px repeat(12, 1fr);
+  }
+
+  .sg-dot-col-title,
+  .sg-dot-prod-cell {
+    width: 110px;
+    padding-left: 4px;
+  }
+
+  .sg-dot-prod-name {
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .sg-dot-month-head {
+    font-size: 9.5px;
+    padding: 2px 0;
+  }
+
+  .sg-dot-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sg-dot-cta {
+    margin-left: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+}

@@ -5,7 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { Leaf, ArrowLeft, Plus, Minus, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Plus, Minus, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { LeafBadgeIcon } from '@/components/ui/LeafBadgeIcon';
 import { Product, Locale } from '@/types';
 import { useRFQBasket } from '@/context/RFQBasketContext';
 
@@ -34,6 +35,7 @@ export function ProductDetailView({ product, currentLocale }: ProductDetailViewP
   const { addItem } = useRFQBasket();
 
   const translation = product.translations[currentLocale] || product.translations.en;
+  const sizesList = translation.sizes && translation.sizes.length > 0 ? translation.sizes : ['Standard Box'];
   const images = (product.images || [])
     .map((img) => (typeof img === 'string' ? img : img.image_url))
     .filter((url): url is string => Boolean(url && !url.startsWith('blob:')));
@@ -42,7 +44,7 @@ export function ProductDetailView({ product, currentLocale }: ProductDetailViewP
   // Interactive states
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0);
   const [selectedBoxSize, setSelectedBoxSize] = useState<string>(
-    translation.sizes[1] || translation.sizes[0] || '10kg'
+    sizesList[1] || sizesList[0] || 'Standard Box'
   );
   const [quantity, setQuantity] = useState<number>(5);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -157,9 +159,9 @@ export function ProductDetailView({ product, currentLocale }: ProductDetailViewP
           {/* Right Column: Title & Controls */}
           <div className="lg:col-span-6 space-y-6 pt-2">
             {/* Category Tag */}
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#258746] uppercase tracking-wider">
-              <Leaf className="w-4 h-4 text-[#258746] fill-[#258746]" />
-              <span>{product.category_id === 'cat-fruits' ? 'Fruits' : 'Vegetables'}</span>
+            <div className="inline-flex items-center gap-2 text-xs font-bold text-[#228731] uppercase tracking-wider bg-[#eef7ed] px-3 py-1.5 rounded-full border border-[#228731]/15">
+              <LeafBadgeIcon className="w-4 h-4 text-[#228731]" />
+              <span>{product.category_id === 'cat-fruits' ? 'Fresh Fruits' : 'Fresh Vegetables'}</span>
             </div>
 
             {/* Title */}
@@ -178,7 +180,7 @@ export function ProductDetailView({ product, currentLocale }: ProductDetailViewP
                 Box Size
               </label>
               <div className="flex items-center gap-3 flex-wrap">
-                {translation.sizes.map((size) => (
+                {sizesList.map((size) => (
                   <button
                     key={size}
                     onClick={() => setSelectedBoxSize(size)}
@@ -247,7 +249,7 @@ export function ProductDetailView({ product, currentLocale }: ProductDetailViewP
             </div>
             <div className="px-3.5 py-1.5 rounded-full bg-emerald-100/80 text-[#1b3e2b] text-xs font-bold flex items-center gap-1.5 border border-emerald-300/40">
               <ShieldCheck className="w-4 h-4 text-[#258746]" />
-              <span>EU & US Export Compliant</span>
+              <span>EU, UK & GCC Export Compliant</span>
             </div>
           </div>
 
@@ -262,38 +264,57 @@ export function ProductDetailView({ product, currentLocale }: ProductDetailViewP
                   <h3 className="text-sm font-extrabold text-[#1b3e2b] uppercase tracking-wide">
                     Origin & Classification
                   </h3>
-                  <span className="text-[11px] text-gray-400 font-semibold">Geographical & HS Data</span>
+                  <span className="text-[11px] text-gray-400 font-semibold">Geographical & Crop Data</span>
                 </div>
               </div>
 
               <div className="space-y-3 text-xs">
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
-                  <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Origin</span>
-                  <span className="font-extrabold text-[#1b3e2b] flex items-center gap-1">
-                    🇪🇬 {translation.origin || 'Egypt, Nile Delta'}
-                  </span>
-                </div>
+                {translation.origin && (
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
+                    <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Origin</span>
+                    <span className="font-extrabold text-[#1b3e2b] flex items-center gap-1">
+                      🇪🇬 {translation.origin}
+                    </span>
+                  </div>
+                )}
 
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
-                  <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Variety</span>
-                  <span className="font-extrabold text-[#1b3e2b]">
-                    {translation.variety || translation.name}
-                  </span>
-                </div>
+                {translation.varieties && translation.varieties.length > 0 ? (
+                  <div className="p-2.5 rounded-xl bg-gray-50/80 space-y-1.5">
+                    <span className="block font-bold text-gray-500 uppercase tracking-wider text-[10px]">Available Varieties</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {translation.varieties.map((v) => (
+                        <span key={v} className="px-2.5 py-0.5 rounded-full bg-emerald-100/90 text-[#1b3e2b] font-bold text-[11px]">
+                          {v}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : translation.variety ? (
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
+                    <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Variety</span>
+                    <span className="font-extrabold text-[#1b3e2b]">
+                      {translation.variety}
+                    </span>
+                  </div>
+                ) : null}
 
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
-                  <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Grade</span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#1b3e2b] font-black text-[11px]">
-                    {translation.grade || 'Export Grade A'}
-                  </span>
-                </div>
+                {translation.grade && (
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
+                    <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Grade</span>
+                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-[#1b3e2b] font-black text-[11px]">
+                      {translation.grade}
+                    </span>
+                  </div>
+                )}
 
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
-                  <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">HS Code</span>
-                  <span className="font-mono font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
-                    {product.hs_code}
-                  </span>
-                </div>
+                {product.hs_code && product.hs_code.trim() !== '' && (
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
+                    <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">HS Code</span>
+                    <span className="font-mono font-extrabold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/60">
+                      {product.hs_code}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -307,42 +328,50 @@ export function ProductDetailView({ product, currentLocale }: ProductDetailViewP
                   <h3 className="text-sm font-extrabold text-[#1b3e2b] uppercase tracking-wide">
                     Quality Parameters
                   </h3>
-                  <span className="text-[11px] text-gray-400 font-semibold">Physical & Organoleptic</span>
+                  <span className="text-[11px] text-gray-400 font-semibold">Physical & Harvest Specs</span>
                 </div>
               </div>
 
               <div className="space-y-3 text-xs">
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
-                  <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Brix Level</span>
-                  <span className="font-extrabold text-[#1b3e2b]">
-                    {product.brix_level}
-                  </span>
-                </div>
+                {product.brix_level && product.brix_level !== 'N/A' && (
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
+                    <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Brix / Sweetness</span>
+                    <span className="font-extrabold text-[#1b3e2b]">
+                      {product.brix_level}
+                    </span>
+                  </div>
+                )}
 
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
-                  <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Average Diameter</span>
-                  <span className="font-extrabold text-[#1b3e2b]">
-                    {translation.average_diameter || '65–80 Mm'}
-                  </span>
-                </div>
+                {translation.average_diameter && (
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
+                    <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Average Diameter</span>
+                    <span className="font-extrabold text-[#1b3e2b]">
+                      {translation.average_diameter}
+                    </span>
+                  </div>
+                )}
 
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
-                  <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Color</span>
-                  <span className="font-extrabold text-[#1b3e2b]">
-                    {translation.color || 'Natural Fresh'}
-                  </span>
-                </div>
+                {translation.color && (
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
+                    <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Color</span>
+                    <span className="font-extrabold text-[#1b3e2b]">
+                      {translation.color}
+                    </span>
+                  </div>
+                )}
 
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
-                  <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Harvest Method</span>
-                  <span className="font-extrabold text-[#1b3e2b] flex items-center gap-1">
-                    🌱 {translation.harvest_method || 'Hand-Picked'}
-                  </span>
-                </div>
+                {translation.harvest_method && (
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
+                    <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Harvest Method</span>
+                    <span className="font-extrabold text-[#1b3e2b] flex items-center gap-1">
+                      🌱 {translation.harvest_method}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
-            {/* CARD 3: Cold Chain & Logistics */}
+            {/* CARD 3: Cold Chain & Packaging */}
             <div className="bg-white rounded-3xl p-6 border border-emerald-900/10 shadow-xs hover:shadow-lg transition-all space-y-4 relative overflow-hidden group lg:col-span-1 md:col-span-2">
               <div className="flex items-center gap-3 border-b border-gray-100 pb-3">
                 <div className="w-10 h-10 rounded-2xl bg-cyan-50 text-cyan-700 flex items-center justify-center font-bold">
@@ -357,46 +386,65 @@ export function ProductDetailView({ product, currentLocale }: ProductDetailViewP
               </div>
 
               <div className="space-y-3 text-xs">
-                <div className="p-2.5 rounded-xl bg-cyan-50/50 border border-cyan-100">
-                  <span className="block font-bold text-cyan-800 uppercase tracking-wider text-[10px] mb-0.5">
-                    Storage Conditions
-                  </span>
-                  <span className="font-black text-[#1b3e2b]">
-                    {product.storage_temp}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
-                  <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Shelf Life</span>
-                  <span className="font-extrabold text-[#1b3e2b]">
-                    {translation.shelf_life}
-                  </span>
-                </div>
-
-                <div className="p-2.5 rounded-xl bg-gray-50/80">
-                  <span className="block font-bold text-gray-500 uppercase tracking-wider text-[10px] mb-0.5">
-                    Packaging Type
-                  </span>
-                  <span className="font-extrabold text-[#1b3e2b]">
-                    {product.container_rules[0]?.package_type || 'Carton Box, Ventilated'}
-                  </span>
-                </div>
-
-                <div className="pt-1">
-                  <span className="block font-bold text-gray-400 uppercase tracking-wider text-[10px] mb-1.5">
-                    Global Certifications
-                  </span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {product.certifications.map((cert) => (
-                      <span
-                        key={cert}
-                        className="px-2 py-0.5 rounded-md bg-emerald-50 text-[#1b3e2b] border border-emerald-200/60 text-[10px] font-black"
-                      >
-                        ✓ {cert}
-                      </span>
-                    ))}
+                {product.storage_temp && (
+                  <div className="p-2.5 rounded-xl bg-cyan-50/50 border border-cyan-100">
+                    <span className="block font-bold text-cyan-800 uppercase tracking-wider text-[10px] mb-0.5">
+                      Storage Temperature
+                    </span>
+                    <span className="font-black text-[#1b3e2b]">
+                      {product.storage_temp}
+                    </span>
                   </div>
-                </div>
+                )}
+
+                {translation.shelf_life && (
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-gray-50/80">
+                    <span className="font-bold text-gray-500 uppercase tracking-wider text-[10px]">Shelf Life</span>
+                    <span className="font-extrabold text-[#1b3e2b]">
+                      {translation.shelf_life}
+                    </span>
+                  </div>
+                )}
+
+                {translation.packaging_options && translation.packaging_options.length > 0 ? (
+                  <div className="p-2.5 rounded-xl bg-gray-50/80 space-y-1.5">
+                    <span className="block font-bold text-gray-500 uppercase tracking-wider text-[10px]">Packaging Options</span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {translation.packaging_options.map((pkg) => (
+                        <span key={pkg} className="px-2 py-0.5 rounded-md bg-white border border-gray-200 text-[#1b3e2b] font-bold text-[10px]">
+                          📦 {pkg}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ) : product.container_rules && product.container_rules.length > 0 ? (
+                  <div className="p-2.5 rounded-xl bg-gray-50/80">
+                    <span className="block font-bold text-gray-500 uppercase tracking-wider text-[10px] mb-0.5">
+                      Packaging Type
+                    </span>
+                    <span className="font-extrabold text-[#1b3e2b]">
+                      {product.container_rules[0]?.package_type}
+                    </span>
+                  </div>
+                ) : null}
+
+                {product.certifications && product.certifications.length > 0 && (
+                  <div className="pt-1">
+                    <span className="block font-bold text-gray-400 uppercase tracking-wider text-[10px] mb-1.5">
+                      Export Certifications
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {product.certifications.map((cert) => (
+                        <span
+                          key={cert}
+                          className="px-2 py-0.5 rounded-md bg-emerald-50 text-[#1b3e2b] border border-emerald-200/60 text-[10px] font-black"
+                        >
+                          ✓ {cert}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -406,52 +454,65 @@ export function ProductDetailView({ product, currentLocale }: ProductDetailViewP
 
         {/* SECTION 3: Availability By Season */}
         <div className="space-y-6">
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-black font-serif text-[#1b3e2b]">
-              Availability By Season
-            </h2>
-            <p className="text-xs sm:text-sm text-gray-500 mt-1 font-medium">
-              When {translation.name} Are At Their Peak, And When They're Out Of Season.
-            </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-black font-serif text-[#1b3e2b]">
+                Product Calendar & Availability
+              </h2>
+              <p className="text-xs sm:text-sm text-gray-500 mt-1 font-medium">
+                Availability may vary according to season, crop plan and customer specifications.
+              </p>
+            </div>
           </div>
 
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-xs space-y-8">
-            {/* Bar Chart Visualizer */}
-            <div className="flex items-end justify-between gap-2 sm:gap-4 h-44 pt-6 pb-2 px-2 border-b border-gray-100">
-              {MONTH_KEYS.map(({ key, label }) => {
-                const status = getMonthStatus(key);
+          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-xs space-y-6">
+            <div className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/60 text-xs text-amber-900 leading-relaxed font-medium">
+              <strong>Note:</strong> This calendar is designed as an initial guide for buyers. Final programs and volumes are confirmed according to harvest conditions and export schedules.
+            </div>
+            {/* Mobile Scroll Hint */}
+            <div className="flex items-center justify-between sm:hidden text-[11px] text-gray-400 font-medium px-1">
+              <span>Monthly Export Cycle</span>
+              <span className="text-[#228731] font-semibold flex items-center gap-1">Swipe to view all months →</span>
+            </div>
 
-                // Determine height and background color based on month status
-                let barHeightClass = 'h-8';
-                let barBgClass = 'bg-[#eaefe9]'; // Out of season neutral
+            {/* Bar Chart Visualizer with smooth horizontal scroll on mobile */}
+            <div className="overflow-x-auto pb-2 -mx-2 px-2" style={{ WebkitOverflowScrolling: 'touch' }}>
+              <div className="flex items-end justify-between gap-2.5 sm:gap-4 h-44 pt-6 pb-2 px-1 min-w-[540px] sm:min-w-0 border-b border-gray-100">
+                {MONTH_KEYS.map(({ key, label }) => {
+                  const status = getMonthStatus(key);
 
-                if (status === 'peak') {
-                  barHeightClass = 'h-36';
-                  barBgClass = 'bg-[#1b3e2b]'; // Dark forest green
-                } else if (status === 'available') {
-                  barHeightClass = 'h-28';
-                  barBgClass = 'bg-[#548c67]'; // Medium green
-                } else if (status === 'limited') {
-                  barHeightClass = 'h-16';
-                  barBgClass = 'bg-[#a8c8b2]'; // Sage light green
-                }
+                  // Determine height and background color based on month status
+                  let barHeightClass = 'h-8';
+                  let barBgClass = 'bg-[#eaefe9]'; // Out of season neutral
 
-                return (
-                  <div key={key} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
-                    {/* Bar */}
-                    <div className="w-full max-w-[42px] flex items-end justify-center h-36">
-                      <div
-                        className={`w-full rounded-2xl transition-all duration-500 group-hover:opacity-90 group-hover:scale-y-105 origin-bottom ${barHeightClass} ${barBgClass}`}
-                        title={`${label}: ${status.toUpperCase()}`}
-                      />
+                  if (status === 'peak') {
+                    barHeightClass = 'h-36';
+                    barBgClass = 'bg-[#1b3e2b]'; // Dark forest green
+                  } else if (status === 'available') {
+                    barHeightClass = 'h-28';
+                    barBgClass = 'bg-[#548c67]'; // Medium green
+                  } else if (status === 'limited') {
+                    barHeightClass = 'h-16';
+                    barBgClass = 'bg-[#a8c8b2]'; // Sage light green
+                  }
+
+                  return (
+                    <div key={key} className="flex-1 min-w-[34px] flex flex-col items-center gap-2 group cursor-pointer">
+                      {/* Bar */}
+                      <div className="w-full max-w-[42px] flex items-end justify-center h-36">
+                        <div
+                          className={`w-full rounded-2xl transition-all duration-500 group-hover:opacity-90 group-hover:scale-y-105 origin-bottom ${barHeightClass} ${barBgClass}`}
+                          title={`${label}: ${status.toUpperCase()}`}
+                        />
+                      </div>
+                      {/* Month Label */}
+                      <span className="text-xs font-extrabold text-gray-700">
+                        {label}
+                      </span>
                     </div>
-                    {/* Month Label */}
-                    <span className="text-xs font-extrabold text-gray-600">
-                      {label}
-                    </span>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
 
             {/* Legend Row */}

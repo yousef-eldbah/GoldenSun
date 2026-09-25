@@ -1,4 +1,5 @@
 import React from 'react';
+import { setRequestLocale } from 'next-intl/server';
 import { ShieldCheck, Lock, CheckCircle2 } from 'lucide-react';
 import { Locale } from '@/types';
 
@@ -12,7 +13,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function PrivacyPolicyPage({ params }: { params: Promise<{ locale: string }> }) {
   const resolvedParams = await params;
-  const locale = resolvedParams.locale as Locale;
+  const locale = (resolvedParams?.locale || 'en') as Locale;
+  setRequestLocale(locale);
 
   return (
     <main className="min-h-screen bg-slate-950 text-white py-16 px-4 sm:px-6 lg:px-8">

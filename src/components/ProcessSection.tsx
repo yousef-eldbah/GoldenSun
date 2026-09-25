@@ -10,37 +10,48 @@ const STAGES = [
     stageNum: '01',
     title: 'Farm',
     description: 'Grown On Carefully Managed Golden Sun Farms, Using Sustainable Practices Suited To Each Crop And Season.',
-    image: '/assets/Group1.svg',
+    image: '/assets/Group1.png',
     imageFirst: false, // Text left, Image right
   },
   {
     stageNum: '02',
     title: 'Harvest',
     description: 'Hand-Picked At Peak Ripeness By Trained Teams, Timed Precisely For The Best Flavor And Shelf Life.',
-    image: '/assets/Group2.svg',
+    image: '/assets/gg.svg',
     imageFirst: true, // Image left, Text right
   },
   {
     stageNum: '03',
     title: 'Packing',
     description: 'Produce Is Carefully Packed In Ventilated Cartons Designed To Protect Quality Through Long-Distance Transport.',
-    image: '/assets/Group3.svg',
+    image: '/assets/Group3.png',
     imageFirst: false, // Text left, Image right
   },
   {
     stageNum: '04',
     title: 'Container Loading',
-    description: 'Produce Is Carefully Packed In Ventilated Cartons Designed To Protect Quality Through Long-Distance Transport.',
-    image: '/assets/image4.svg',
+    description: 'Produce Is Loaded Into Temperature-Controlled Refrigerated Containers (Reefers) To Maintain The Cold Chain.',
+    image: '/assets/image4.png',
     imageFirst: true, // Image left, Text right
   },
   {
     stageNum: '05',
     title: 'Delivery',
     description: 'Cartons Arrive At Their Destination And Are Handed Off To Distributors, Ready For Local Markets And Shelves.',
-    image: '/assets/image5.svg',
+    image: '/assets/image5.png',
     imageFirst: false, // Text left, Image right
   },
+];
+
+const PIPELINE_STAGES = [
+  { num: '01', title: 'Farm', desc: 'Sustainable Farming' },
+  { num: '02', title: 'Harvest', desc: 'Peak Ripeness' },
+  { num: '03', title: 'Washing', desc: 'Pure Sanitization' },
+  { num: '04', title: 'Cooling', desc: 'Pre-Cooling Cold Chain' },
+  { num: '05', title: 'Packing', desc: 'Ventilated Cartons' },
+  { num: '06', title: 'Loading', desc: 'Reefer Monitoring' },
+  { num: '07', title: 'Inspection', desc: 'Quality & Phytosanitary' },
+  { num: '08', title: 'Delivery', desc: 'Global Ports Arrival' },
 ];
 
 export function ProcessSection({ currentLocale }: { currentLocale: Locale }) {
@@ -49,7 +60,7 @@ export function ProcessSection({ currentLocale }: { currentLocale: Locale }) {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 sm:space-y-24">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3">
+        <div className="text-center max-w-4xl mx-auto space-y-4">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[#17C548] text-xs font-bold uppercase tracking-wider">
             <LeafBadgeIcon className="w-4 h-4 text-[#17C548]" />
             <span>OUR EXPORT PROCESS</span>
@@ -62,6 +73,28 @@ export function ProcessSection({ currentLocale }: { currentLocale: Locale }) {
           <p className="text-xs sm:text-sm text-gray-500 font-medium max-w-2xl mx-auto leading-relaxed">
             Every Shipment Moves Through Eight Carefully Controlled Stages, Built To Protect Freshness And Quality At Each Step.
           </p>
+
+          {/* 8-Stage Overview Pipeline (Text-only without images) */}
+          <div className="pt-6">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 sm:gap-2.5">
+              {PIPELINE_STAGES.map((s) => (
+                <div
+                  key={s.num}
+                  className="bg-[#fafdfa] border border-[#e2efe1] hover:border-[#17C548] rounded-xl p-2.5 text-center transition-all duration-200 hover:shadow-sm"
+                >
+                  <span className="text-[10px] font-extrabold text-[#17C548] tracking-widest block">
+                    STAGE {s.num}
+                  </span>
+                  <span className="text-xs font-bold text-[#1b3e2b] block mt-0.5 font-serif">
+                    {s.title}
+                  </span>
+                  <span className="text-[10px] text-gray-500 block leading-tight mt-1">
+                    {s.desc}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Stages Alternating Grid */}

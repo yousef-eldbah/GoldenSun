@@ -1,4 +1,5 @@
 import React from 'react';
+import { setRequestLocale } from 'next-intl/server';
 import { Locale } from '@/types';
 import { ProductCatalog } from '@/components/ProductCatalog';
 
@@ -44,7 +45,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function ProductsPage({ params }: { params: Promise<{ locale: string }> }) {
   const resolvedParams = await params;
-  const locale = resolvedParams.locale as Locale;
+  const locale = (resolvedParams?.locale || 'en') as Locale;
+  setRequestLocale(locale);
 
   const catalogSchema = {
     '@context': 'https://schema.org',

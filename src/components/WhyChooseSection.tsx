@@ -15,17 +15,17 @@ export function WhyChooseSection({ currentLocale }: { currentLocale: Locale }) {
     <section id="why-choose-us" className="why-sec-home">
       <div className="why-sec-container">
         {/* Top Header */}
-        <div className="why-sec-header">
-          <div className="why-sec-badge">
+        <div className="sg-section-header">
+          <div className="sg-section-badge">
             <LeafBadgeIcon className="w-4 h-4 text-[#228731]" />
             <span>{tWhy('badge')}</span>
           </div>
 
-          <h2 className="why-sec-title">
-            <span className="why-sec-title-dark">{tWhy('title_part1')}</span>
-            <span className="why-sec-title-green">{tWhy('title_part2')}</span>
+          <h2 className="sg-section-title">
+            <span className="sg-section-title-dark">{tWhy('title_part1')}</span>
+            <span className="sg-section-title-green">{tWhy('title_part2')}</span>
           </h2>
-          <p className="why-sec-subtitle font-serif">
+          <p className="sg-section-subtitle">
             {tWhy('banner_text')}
           </p>
         </div>
@@ -36,7 +36,7 @@ export function WhyChooseSection({ currentLocale }: { currentLocale: Locale }) {
           <div className="why-sec-card">
             <div className="why-sec-card-img-wrap">
               <Image
-                src="/assets/why1.svg"
+                src="/assets/why1.png"
                 alt={tWhy('item1_title')}
                 width={380}
                 height={260}
@@ -54,11 +54,12 @@ export function WhyChooseSection({ currentLocale }: { currentLocale: Locale }) {
           <div className="why-sec-card">
             <div className="why-sec-card-img-wrap">
               <Image
-                src="/assets/why2.svg"
+                src="/assets/ss.png"
                 alt={tWhy('item2_title')}
                 width={380}
                 height={260}
                 className="why-sec-card-img"
+                unoptimized
               />
               <span className="why-sec-card-number">02</span>
             </div>
@@ -72,7 +73,7 @@ export function WhyChooseSection({ currentLocale }: { currentLocale: Locale }) {
           <div className="why-sec-card">
             <div className="why-sec-card-img-wrap">
               <Image
-                src="/assets/why3.svg"
+                src="/assets/why3.png"
                 alt={tWhy('item3_title')}
                 width={380}
                 height={260}

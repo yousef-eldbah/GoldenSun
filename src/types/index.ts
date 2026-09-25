@@ -32,10 +32,12 @@ export interface ContainerRule {
 export interface ProductTranslation {
   name: string;
   description: string;
-  origin: string;
-  shelf_life: string;
-  sizes: string[];
+  origin?: string;
+  shelf_life?: string;
+  sizes?: string[];
   variety?: string;
+  varieties?: string[];
+  packaging_options?: string[];
   grade?: string;
   color?: string;
   harvest_method?: string;
@@ -46,17 +48,17 @@ export interface Product {
   id: string;
   slug: string;
   category_id: string;
-  hs_code: string;
-  storage_temp: string;
-  brix_level: string;
-  pdf_catalog_url: string;
+  hs_code?: string;
+  storage_temp?: string;
+  brix_level?: string;
+  pdf_catalog_url?: string;
   is_featured: boolean;
   seasonality: Record<string, boolean>; // e.g. { "jan": true, "feb": true, ... }
   season_status?: Record<string, 'peak' | 'available' | 'limited' | 'off'>; // Monthly season status for chart
   translations: Record<Locale, ProductTranslation>;
   images: ProductImage[];
-  container_rules: ContainerRule[];
-  certifications: string[]; // e.g. ['GLOBALG.A.P.', 'ISO 22000', 'BRCGS', 'FDA']
+  container_rules?: ContainerRule[];
+  certifications?: string[]; // e.g. ['GLOBALG.A.P.', 'GRASP', 'GCC']
 }
 
 export type Incoterm = 'FOB' | 'CIF' | 'CFR';
@@ -114,4 +116,16 @@ export interface Article {
     summary: string;
     content: string;
   }>;
+}
+
+export interface ContactInquiry {
+  id: string;
+  name: string;
+  email: string;
+  mobile?: string;
+  company?: string;
+  subject: string;
+  message: string;
+  status: 'new' | 'contacted' | 'archived';
+  created_at: string;
 }

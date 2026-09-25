@@ -4,7 +4,7 @@ import { Product, Category, SiteSettings, Article, RFQ } from '@/types';
 
 // Polyfill WebSocket for SSR / Node environment to prevent @supabase/realtime-js crash
 if (typeof window === 'undefined' && typeof globalThis !== 'undefined' && !globalThis.WebSocket) {
-  // @ts-ignore
+  // @ts-expect-error WebSocket polyfill for SSR
   globalThis.WebSocket = class {};
 }
 
@@ -21,7 +21,6 @@ export const supabase = isSupabaseConfigured
       },
     })
   : null;
-
 // Helper Data Services with automatic fallback to mockData
 export const apiService = {
   async getProducts(): Promise<Product[]> {
@@ -97,61 +96,67 @@ export const apiService = {
     }
   },
 
-  async submitRFQ(rfqData: RFQ): Promise<{ success: boolean; rfq_number: string }> {
-    const generatedRfqNumber = `SG-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
-
-    if (isSupabaseConfigured && supabase) {
-      try {
-        const { data: rfqRow, error: rfqError } = await supabase
-          .from('rfqs')
-          .insert({
-            rfq_number: generatedRfqNumber,
-            company_name: rfqData.company_name,
-            contact_name: rfqData.contact_name,
-            email: rfqData.email,
-            phone_whatsapp: rfqData.phone_whatsapp,
-            country: rfqData.country,
-            port_of_discharge: rfqData.port_of_discharge,
-            incoterm: rfqData.incoterm,
-            estimated_etd: rfqData.estimated_etd,
-            notes: rfqData.notes,
-            gdpr_consent: rfqData.gdpr_consent,
-            status: 'new',
-          })
-          .select()
-          .single();
-
-        if (!rfqError && rfqRow) {
-          const itemsToInsert = rfqData.items.map((item) => ({
-            rfq_id: rfqRow.id,
-            product_id: item.product_id,
-            quantity_tons: item.quantity_tons,
-            preferred_packaging: item.preferred_packaging,
-          }));
-          await supabase.from('rfq_items').insert(itemsToInsert);
-        }
-      } catch (err) {
-        console.error('Supabase submission fallback to local:', err);
-      }
-    }
-
-    // Save to localStorage as a fallback lead storage for demo / admin viewing
+  async submitRFQ(rfqData: RFQ): Promise<{ success: boolean; rfq_number: string; error?: string }> {
+    // If called in browser, delegate to the dedicated server route handler
     if (typeof window !== 'undefined') {
       try {
-        const existing = JSON.parse(localStorage.getItem('sun_golden_rfqs') || '[]');
-        existing.unshift({
-          ...rfqData,
-          id: `local-${Date.now()}`,
-          rfq_number: generatedRfqNumber,
-          status: 'new',
-          created_at: new Date().toISOString(),
+        const res = await fetch('/api/rfq', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(rfqData),
         });
-        localStorage.setItem('sun_golden_rfqs', JSON.stringify(existing));
-      } catch {
-        // Ignore localStorage error if disabled
+        const json = await res.json();
+        if (!res.ok || !json.success) {
+          throw new Error(json.error || 'Failed to record quote request');
+        }
+        return { success: true, rfq_number: json.rfq_number };
+      } catch (err: any) {
+        console.error('API submission error:', err);
+        throw err;
       }
     }
 
-    return { success: true, rfq_number: generatedRfqNumber };
+    // Direct server-side call fallback
+    const generatedRfqNumber = `SG-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    if (isSupabaseConfigured && supabase) {
+      const { data: rfqRow, error: rfqError } = await supabase
+        .from('rfqs')
+        .insert({
+          rfq_number: generatedRfqNumber,
+          company_name: rfqData.company_name,
+          contact_name: rfqData.contact_name,
+          email: rfqData.email,
+          phone_whatsapp: rfqData.phone_whatsapp,
+          country: rfqData.country,
+          port_of_discharge: rfqData.port_of_discharge,
+          incoterm: rfqData.incoterm,
+          estimated_etd: rfqData.estimated_etd,
+          notes: rfqData.notes,
+          gdpr_consent: rfqData.gdpr_consent,
+          status: 'new',
+        })
+        .select()
+        .single();
+
+      if (rfqError || !rfqRow) {
+        throw new Error(rfqError?.message || 'Failed to submit RFQ to database');
+      }
+
+      if (rfqData.items && rfqData.items.length > 0) {
+        const itemsToInsert = rfqData.items.map((item) => ({
+          rfq_id: rfqRow.id,
+          product_id: item.product_id,
+          product_name: item.product_name,
+          quantity_tons: item.quantity_tons,
+          preferred_packaging: item.preferred_packaging,
+        }));
+        await supabase.from('rfq_items').insert(itemsToInsert);
+      }
+
+      return { success: true, rfq_number: generatedRfqNumber };
+    }
+
+    throw new Error('Supabase database is not configured');
   },
 };
+

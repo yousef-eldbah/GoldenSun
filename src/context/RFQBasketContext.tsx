@@ -47,9 +47,9 @@ export function RFQBasketProvider({ children }: { children: React.ReactNode }) {
     }
   }, [items]);
 
-  const addItem = (product: Product, quantityTons: number = 24, packaging?: string) => {
-    const defaultPackage = packaging || product.container_rules[0]?.package_type || 'Standard Carton';
-    const productName = product.translations.en.name;
+  const addItem = (product: Product, quantityTons: number = 1, packaging?: string) => {
+    const defaultPackage = packaging || product.container_rules?.[0]?.package_type || product.translations?.en?.packaging_options?.[0] || 'Standard Carton';
+    const productName = product.translations?.en?.name || Object.values(product.translations || {})[0]?.name || 'Produce Item';
 
     setItems((prev) => {
       const existing = prev.find((item) => item.product_id === product.id);

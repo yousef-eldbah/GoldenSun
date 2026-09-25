@@ -46,7 +46,7 @@ export function RFQDrawer({ currentLocale }: { currentLocale: Locale }) {
               <div key={item.product_id} className="flex items-center justify-between bg-emerald-900/40 p-2 rounded-xl text-xs">
                 <div>
                   <span className="font-bold text-white block">{item.product_name}</span>
-                  <span className="text-[10px] text-emerald-200/80">{item.quantity_tons} MT</span>
+                  <span className="text-[10px] text-emerald-200/80">{item.quantity_tons} {item.quantity_tons === 1 ? 'Container' : 'Containers'}</span>
                 </div>
                 <button
                   onClick={() => removeItem(item.product_id)}
@@ -61,8 +61,8 @@ export function RFQDrawer({ currentLocale }: { currentLocale: Locale }) {
 
           {/* Total Summary */}
           <div className="text-[11px] text-emerald-200/80 bg-emerald-900/60 px-3 py-1.5 rounded-xl flex items-center justify-between border border-emerald-500/20">
-            <span>Total Weight:</span>
-            <span className="font-extrabold text-amber-400">{totalTonnage} Metric Tons</span>
+            <span>Total Containers:</span>
+            <span className="font-extrabold text-amber-400">{totalTonnage} {totalTonnage === 1 ? 'Container' : 'Containers'}</span>
           </div>
 
           {/* Action Buttons */}

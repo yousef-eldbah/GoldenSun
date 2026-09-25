@@ -82,6 +82,13 @@ export function SeasonCalendar({ currentLocale }: { currentLocale: Locale }) {
         </table>
       </div>
 
+      {/* Official Season Disclaimer Note */}
+      <div className="pt-2 border-t border-[var(--sg-sand)] text-xs text-gray-500 leading-relaxed">
+        <p>
+          <strong className="text-[#1b3e2b]">Note:</strong> This calendar is designed as an initial guide for buyers. Availability may vary according to season, crop plan, and customer specifications. Final export programs and volumes are confirmed according to actual harvest conditions.
+        </p>
+      </div>
+
     </Card>
   );
 }

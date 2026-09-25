@@ -188,6 +188,12 @@
   margin-bottom: 20px;
 }
 
+.footer-logo-img {
+  height: 44px;
+  width: auto;
+  object-fit: contain;
+}
+
 .footer-logo-icon {
   width: 44px;
   height: auto;
@@ -342,6 +348,17 @@
   font-size: 13px;
   color: rgba(255, 255, 255, 0.82);
   line-height: 1.5;
+}
+
+.footer-contact-link {
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-contact-link:hover {
+  color: #55d878;
+  text-decoration: underline;
 }
 
 /* ============================================

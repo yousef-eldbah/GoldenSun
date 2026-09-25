@@ -5,33 +5,54 @@ import { useTranslations } from 'next-intl';
 import { Calculator, Package, Truck, Plus, CheckCircle2, ArrowRight } from 'lucide-react';
 import { mockProducts } from '@/lib/mockData';
 import { useRFQBasket } from '@/context/RFQBasketContext';
-import { Locale, ContainerRule } from '@/types';
+import { Product, Locale, ContainerRule } from '@/types';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 
-export function ContainerCalculator({ currentLocale }: { currentLocale: Locale }) {
+interface ContainerCalculatorProps {
+  currentLocale: Locale;
+  initialProducts?: Product[];
+}
+
+export function ContainerCalculator({ currentLocale, initialProducts }: ContainerCalculatorProps) {
   const t = useTranslations('calculator');
   const { addItem } = useRFQBasket();
 
-  const [selectedProductId, setSelectedProductId] = useState<string>(mockProducts[0].id);
+  const productsList = initialProducts && initialProducts.length > 0 ? initialProducts : mockProducts;
+
+  const [selectedProductId, setSelectedProductId] = useState<string>(productsList[0]?.id || mockProducts[0].id);
   const [containerType, setContainerType] = useState<'40ft' | '20ft'>('40ft');
   const [selectedRuleIndex, setSelectedRuleIndex] = useState<number>(0);
   const [palletCount, setPalletCount] = useState<number>(20);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const selectedProduct = mockProducts.find((p) => p.id === selectedProductId) || mockProducts[0];
-  const containerRules = selectedProduct.container_rules;
-  const currentRule: ContainerRule = containerRules[selectedRuleIndex] || containerRules[0];
+  const defaultFallbackRule: ContainerRule = {
+    id: 'default-cr',
+    package_type: 'Standard Export Carton',
+    net_weight_kg: 10,
+    gross_weight_kg: 10.5,
+    cartons_per_pallet: 100,
+    pallets_per_40ft_reefer: 20,
+    pallets_per_20ft_reefer: 10,
+  };
+
+  const selectedProduct = productsList.find((p) => p.id === selectedProductId) || productsList[0] || mockProducts[0];
+  const containerRules = selectedProduct.container_rules && selectedProduct.container_rules.length > 0
+    ? selectedProduct.container_rules
+    : [defaultFallbackRule];
+  const currentRule: ContainerRule = containerRules[selectedRuleIndex] || containerRules[0] || defaultFallbackRule;
 
   const maxPallets = containerType === '40ft' ? currentRule.pallets_per_40ft_reefer : currentRule.pallets_per_20ft_reefer;
 
   const handleProductChange = (prodId: string) => {
     setSelectedProductId(prodId);
     setSelectedRuleIndex(0);
-    const prod = mockProducts.find((p) => p.id === prodId);
-    if (prod && prod.container_rules.length > 0) {
+    const prod = productsList.find((p) => p.id === prodId);
+    if (prod && prod.container_rules && prod.container_rules.length > 0) {
       setPalletCount(containerType === '40ft' ? prod.container_rules[0].pallets_per_40ft_reefer : prod.container_rules[0].pallets_per_20ft_reefer);
+    } else {
+      setPalletCount(containerType === '40ft' ? 20 : 10);
     }
   };
 
@@ -93,9 +114,9 @@ export function ContainerCalculator({ currentLocale }: { currentLocale: Locale }
               onChange={(e) => handleProductChange(e.target.value)}
               className="w-full rounded-lg bg-[var(--sg-cream)] border border-[var(--sg-sand)] px-4 py-3 text-sm text-[var(--sg-charcoal)] font-semibold focus:outline-none focus:ring-2 focus:ring-[var(--sg-forest)]/30 focus:border-[var(--sg-forest)] cursor-pointer"
             >
-              {mockProducts.map((p) => (
+              {productsList.map((p) => (
                 <option key={p.id} value={p.id}>
-                  {p.translations[currentLocale]?.name || p.translations.en.name} (HS {p.hs_code})
+                  {p.translations[currentLocale]?.name || p.translations.en?.name || p.slug} {p.hs_code ? `(HS ${p.hs_code})` : ''}
                 </option>
               ))}
             </select>

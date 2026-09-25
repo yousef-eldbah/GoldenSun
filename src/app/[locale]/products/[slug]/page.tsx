@@ -1,5 +1,6 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
+import { setRequestLocale } from 'next-intl/server';
 import { services } from '@/services';
 import { Locale } from '@/types';
 import { ProductDetailView } from '@/components/ProductDetailView';
@@ -25,7 +26,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const resolvedParams = await params;
-  const locale = resolvedParams.locale as Locale;
+  const locale = (resolvedParams?.locale || 'en') as Locale;
+  setRequestLocale(locale);
   const product = await services.productRepository.getBySlug(resolvedParams.slug);
 
   if (!product) notFound();
@@ -40,12 +42,25 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     image: imageUrls,
     description: translation.description,
     category: product.category_id,
-    brand: { '@type': 'Brand', name: 'Sun Golden Export' },
+    countryOfOrigin: {
+      '@type': 'Country',
+      name: translation.origin || 'Egypt',
+    },
+    brand: { '@type': 'Brand', name: 'Golden Sun Export' },
     offers: {
-      '@type': 'Offer',
+      '@type': 'AggregateOffer',
       priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
-      seller: { '@type': 'Organization', name: 'Sun Golden for Export & Agricultural Development' },
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        priceType: 'https://schema.org/InvoicePrice',
+        unitText: 'Metric Ton (Wholesale B2B Export)',
+      },
+      eligibleQuantity: {
+        '@type': 'QuantitativeValue',
+        value: 10,
+        unitCode: 'TNE',
+      },
+      seller: { '@type': 'Organization', name: 'Golden Sun for Export & Agricultural Development' },
     },
   };
 

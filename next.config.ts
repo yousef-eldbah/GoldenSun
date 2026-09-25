@@ -6,6 +6,8 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig: NextConfig = {
   // ─── Image Optimization ───────────────────────────────────────────────────
   images: {
+    // Cloudflare Workers runtime compatibility
+    unoptimized: true,
     // Use modern AVIF/WebP formats for smaller file sizes
     formats: ['image/avif', 'image/webp'],
     // Minimise layout shift with explicit dimension hints

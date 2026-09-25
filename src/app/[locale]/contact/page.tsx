@@ -1,5 +1,6 @@
 import React from 'react';
 import { ContactSection } from '@/components/ContactSection';
+import { setRequestLocale } from 'next-intl/server';
 import { Locale } from '@/types';
 
 const contactSeo = {
@@ -44,7 +45,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function ContactPage({ params }: { params: Promise<{ locale: string }> }) {
   const resolvedParams = await params;
-  const locale = resolvedParams.locale as Locale;
+  const locale = (resolvedParams?.locale || 'en') as Locale;
+  setRequestLocale(locale);
 
   const contactSchema = {
     '@context': 'https://schema.org',

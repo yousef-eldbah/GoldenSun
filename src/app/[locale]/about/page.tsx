@@ -1,6 +1,7 @@
 import React from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import {
   ShieldCheck,
   Award,
@@ -12,6 +13,7 @@ import {
   Laptop,
   Globe,
   Rocket,
+  ArrowRight,
 } from 'lucide-react';
 import { Locale } from '@/types';
 import './aboutPage.css';
@@ -20,7 +22,7 @@ import './aboutPage.css';
 const aboutSeo = {
   en: {
     title: 'About Us | Golden Sun Agricultural Export History & Vision',
-    description: "Learn about Golden Sun's history, premium Egyptian agricultural produce, organic farming standards, food safety certifications, and global export partnerships.",
+    description: "Learn about Golden Sun's history, premium Egyptian agricultural produce, sustainable farming standards, food safety certifications, and global export partnerships.",
   },
   de: {
     title: 'Über Uns | Golden Sun Agrarexport Ägypten - Geschichte & Qualität',
@@ -59,7 +61,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
   const resolvedParams = await params;
-  const locale = resolvedParams.locale as Locale;
+  const locale = (resolvedParams?.locale || 'en') as Locale;
+  setRequestLocale(locale);
   const tAbout = await getTranslations({ locale, namespace: 'about_page' });
   const tJ = await getTranslations({ locale, namespace: 'journey' });
 
@@ -71,14 +74,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   ];
 
   const timelineItems = [
-    { year: '2005', title: tJ('item_2005_title'), desc: tJ('item_2005_desc'), isGreen: true, side: 'left', icon: Building2 },
-    { year: '2008', title: tJ('item_2008_title'), desc: tJ('item_2008_desc'), isGreen: false, side: 'right', icon: Users },
-    { year: '2011', title: tJ('item_2011_title'), desc: tJ('item_2011_desc'), isGreen: false, side: 'left', icon: Handshake },
-    { year: '2014', title: tJ('item_2014_title'), desc: tJ('item_2014_desc'), isGreen: true, side: 'right', icon: Award },
-    { year: '2019', title: tJ('item_2019_title'), desc: tJ('item_2019_desc'), isGreen: false, side: 'left', icon: Laptop },
-    { year: '2022', title: tJ('item_2022_title'), desc: tJ('item_2022_desc'), isGreen: false, side: 'right', icon: ShieldCheck },
-    { year: '2024', title: tJ('item_2024_title'), desc: tJ('item_2024_desc'), isGreen: true, side: 'left', icon: Globe },
-    { year: '2026', title: tJ('item_2026_title'), desc: tJ('item_2026_desc'), isGreen: false, side: 'right', icon: Rocket },
+    { year: '12-12-2022', title: tJ('item_founded_title'), desc: tJ('item_founded_desc'), isGreen: true, side: 'left', icon: Building2 },
+    { year: '2025–2026', title: tJ('item_gcc_title'), desc: tJ('item_gcc_desc'), isGreen: false, side: 'right', icon: Globe },
+    { year: '2025–2026', title: tJ('item_europe_title'), desc: tJ('item_europe_desc'), isGreen: true, side: 'left', icon: Award },
+    { year: 'Today', title: tJ('item_today_title'), desc: tJ('item_today_desc'), isGreen: false, side: 'right', icon: Rocket },
   ];
 
   return (
@@ -194,6 +193,77 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
             })}
           </div>
         </section>
+
+        {/* Process CTA Banner at bottom of About page */}
+        <section style={{
+          marginTop: '60px',
+          background: 'linear-gradient(135deg, #1b3e2b 0%, #0d281a 100%)',
+          borderRadius: '24px',
+          padding: '40px 48px',
+          color: '#ffffff',
+          boxShadow: '0 16px 36px rgba(13, 40, 26, 0.15)',
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '32px',
+            flexWrap: 'wrap',
+          }}>
+            <div>
+              <p style={{
+                fontSize: '12px',
+                fontWeight: 800,
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: '#55d878',
+                margin: '0 0 8px 0',
+              }}>
+                From Farm Harvest To Global Ports
+              </p>
+              <h2 style={{
+                fontFamily: 'var(--font-vidaloka), "Vidaloka", Georgia, serif',
+                fontSize: '28px',
+                fontWeight: 700,
+                color: '#ffffff',
+                margin: '0 0 8px 0',
+              }}>
+                Discover Our 6-Step Export Journey
+              </h2>
+              <p style={{
+                fontSize: '14px',
+                lineHeight: 1.6,
+                color: 'rgba(255, 255, 255, 0.8)',
+                margin: 0,
+                maxWidth: '560px',
+              }}>
+                Learn how our quality control, cold-chain pre-cooling, optical sorting, and phytosanitary handling operate at scale.
+              </p>
+            </div>
+            <Link
+              href={`/${locale}/process`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '14px 28px',
+                background: '#228731',
+                color: '#ffffff',
+                fontSize: '15px',
+                fontWeight: 700,
+                borderRadius: '30px',
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                boxShadow: '0 6px 20px rgba(34, 135, 49, 0.4)',
+                transition: 'all 0.25s ease',
+              }}
+            >
+              <span>Explore Export Process</span>
+              <ArrowRight size={18} />
+            </Link>
+          </div>
+        </section>
+
       </div>
     </main>
   );

@@ -5,44 +5,73 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useTranslations } from 'next-intl';
-import { Send, CheckCircle2, ShieldCheck, Trash2, Plus, Calendar as CalendarIcon, Package, Leaf } from 'lucide-react';
+import {
+  Send,
+  CheckCircle2,
+  Trash2,
+  Plus,
+  Package,
+  Leaf,
+  MessageSquare,
+  AlertTriangle,
+  ArrowRight,
+  Anchor,
+  Globe,
+  Building2,
+  User,
+  Mail,
+  Phone
+} from 'lucide-react';
 import { useRFQBasket } from '@/context/RFQBasketContext';
 import { apiService } from '@/lib/supabase';
-import { mockProducts } from '@/lib/mockData';
-import { Locale } from '@/types';
+import { mockProducts, mockSiteSettings } from '@/lib/mockData';
+import { Product, Locale, Incoterm } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const rfqSchema = z.object({
-  first_name: z.string().min(2, 'First name is required'),
-  last_name: z.string().min(2, 'Last name is required'),
-  company_name: z.string().optional(),
-  street_address: z.string().min(3, 'Street address is required'),
-  country: z.string().min(2, 'Country / Region is required'),
-  state: z.string().optional(),
-  email: z.string().email('Please enter a valid email address'),
-  phone: z.string().min(6, 'Valid phone number is required'),
-  // Order details
+const rfqFormSchema = z.object({
+  company_name: z.string().min(2, 'Company name is required for B2B export quotes'),
+  contact_name: z.string().min(2, 'Contact person name is required'),
+  email: z.string().email('Please enter a valid business email address'),
+  phone_whatsapp: z.string().min(6, 'Valid WhatsApp / phone number with country code is required'),
+  country: z.string().min(2, 'Destination country is required'),
+  port_of_discharge: z.string().min(2, 'Destination sea/air port of discharge is required'),
+  incoterm: z.enum(['FOB', 'CIF', 'CFR']),
+  shipping_method: z.string().optional(),
+  estimated_etd: z.string().optional(),
+  notes: z.string().optional(),
+  // Single-item fallback when basket is empty
   selected_product_id: z.string().optional(),
   box_size: z.string().optional(),
   quantity: z.string().optional(),
-  incoterm: z.enum(['FOB', 'CIF', 'CFR']),
-  shipping_method: z.string().optional(),
-  target_delivery_date: z.string().optional(),
-  notes: z.string().optional(),
   gdpr_consent: z.boolean().refine((val) => val === true, {
-    message: 'Please accept the terms to send request.',
+    message: 'Please accept the data processing terms to proceed.',
   }),
 });
 
-type RFQFormData = z.infer<typeof rfqSchema>;
+type RFQFormData = z.infer<typeof rfqFormSchema>;
 
-export function RFQForm({ currentLocale }: { currentLocale: Locale }) {
+interface RFQFormProps {
+  currentLocale: Locale;
+  initialProducts?: Product[];
+}
+
+export function RFQForm({ currentLocale, initialProducts }: RFQFormProps) {
   const t = useTranslations('rfq');
   const { items, clearBasket, updateQuantity, removeItem, addItem, incoterm, portOfDischarge } = useRFQBasket();
 
+  const productsList = initialProducts && initialProducts.length > 0 ? initialProducts : mockProducts;
+
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [successRef, setSuccessRef] = useState<string | null>(null);
+  const [successInfo, setSuccessInfo] = useState<{
+    rfq_number: string;
+    company_name: string;
+    items_summary: string;
+    country: string;
+    port: string;
+  } | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [lastSubmittedData, setLastSubmittedData] = useState<RFQFormData | null>(null);
 
   const {
     register,
@@ -51,30 +80,38 @@ export function RFQForm({ currentLocale }: { currentLocale: Locale }) {
     watch,
     formState: { errors },
   } = useForm<RFQFormData>({
-    resolver: zodResolver(rfqSchema),
+    resolver: zodResolver(rfqFormSchema),
     defaultValues: {
-      incoterm: (incoterm as any) || 'FOB',
+      company_name: '',
+      contact_name: '',
+      email: '',
+      phone_whatsapp: '',
+      country: '',
+      port_of_discharge: portOfDischarge || '',
+      incoterm: (incoterm as Incoterm) || 'FOB',
       shipping_method: 'Sea Reefer Container (40ft HC)',
       gdpr_consent: true,
+      quantity: '1',
     },
   });
 
   const selectedProductId = watch('selected_product_id');
 
-  // Handle adding a product directly from the order form if basket is empty
   const handleSelectProduct = (productId: string) => {
     setValue('selected_product_id', productId);
-    const prod = mockProducts.find((p) => p.id === productId);
+    const prod = productsList.find((p) => p.id === productId);
     if (prod && !items.some((i) => i.product_id === prod.id)) {
-      addItem(prod, 10);
+      addItem(prod, 1);
     }
   };
 
   const onSubmit = async (data: RFQFormData) => {
     setIsSubmitting(true);
+    setSubmitError(null);
+    setLastSubmittedData(data);
 
     try {
-      // Build items payload from basket or form selection
+      // Build items payload from basket or single form selector
       const itemsPayload =
         items.length > 0
           ? items.map((i) => ({
@@ -88,9 +125,9 @@ export function RFQForm({ currentLocale }: { currentLocale: Locale }) {
               {
                 product_id: data.selected_product_id,
                 product_name:
-                  mockProducts.find((p) => p.id === data.selected_product_id)?.translations[currentLocale]?.name ||
+                  productsList.find((p) => p.id === data.selected_product_id)?.translations[currentLocale]?.name ||
                   'Selected Produce',
-                quantity_tons: Number(data.quantity) || 10,
+                quantity_tons: Number(data.quantity) || 1,
                 preferred_packaging: data.box_size || 'Standard Export Box',
               },
             ]
@@ -103,67 +140,116 @@ export function RFQForm({ currentLocale }: { currentLocale: Locale }) {
       }
 
       const rfqPayload = {
-        company_name: data.company_name || `${data.first_name} ${data.last_name}`,
-        contact_name: `${data.first_name} ${data.last_name}`,
+        company_name: data.company_name,
+        contact_name: data.contact_name,
         email: data.email,
-        phone_whatsapp: data.phone,
-        country: `${data.country}${data.state ? `, ${data.state}` : ''}`,
-        port_of_discharge: data.street_address || portOfDischarge || 'Primary Sea Port',
+        phone_whatsapp: data.phone_whatsapp,
+        country: data.country,
+        port_of_discharge: data.port_of_discharge,
         incoterm: data.incoterm,
-        estimated_etd: data.target_delivery_date || new Date().toISOString().split('T')[0],
-        notes: `Shipping Method: ${data.shipping_method || 'N/A'}. ${data.notes || ''}`,
+        estimated_etd: data.estimated_etd || new Date().toISOString().split('T')[0],
+        notes: `Shipping Method: ${data.shipping_method || 'N/A'}. ${data.notes || ''}`.trim(),
         gdpr_consent: true,
         items: itemsPayload,
       };
 
       const result = await apiService.submitRFQ(rfqPayload as any);
-      setSuccessRef((result as any)?.rfq_number || `SG-${Date.now().toString().slice(-6)}`);
-      if (typeof window !== 'undefined') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (result.success) {
+        const summaryText = itemsPayload.map((i) => `${i.product_name} (${i.quantity_tons} ${i.quantity_tons === 1 ? 'Container' : 'Containers'})`).join(', ');
+        setSuccessInfo({
+          rfq_number: result.rfq_number,
+          company_name: data.company_name,
+          items_summary: summaryText,
+          country: data.country,
+          port: data.port_of_discharge,
+        });
+        clearBasket();
+        if (typeof window !== 'undefined') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       }
-      clearBasket();
-    } catch (err) {
+    } catch (err: any) {
       console.error('RFQ Submit Error:', err);
-      alert('Error submitting inquiry. Please try again.');
+      setSubmitError(err?.message || 'We could not save your request to the database right now.');
+      if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 100, behavior: 'smooth' });
+      }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  useEffect(() => {
-    if (successRef && typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }, [successRef]);
+  const cleanWhatsAppNumber = (mockSiteSettings.whatsapp || '+201013562660').replace(/[^0-9]/g, '');
 
-  if (successRef) {
+  // SUCCESS CONFIRMATION SCREEN (High conversion B2B page with WhatsApp push)
+  if (successInfo) {
+    const waText = encodeURIComponent(
+      `Hello Golden Sun Export Team,\n\nI just submitted an official Request for Quotation (RFQ) on your website.\n\n📌 RFQ Reference: ${successInfo.rfq_number}\n🏢 Company: ${successInfo.company_name}\n📦 Cargo: ${successInfo.items_summary}\n⚓ Destination Port: ${successInfo.port}, ${successInfo.country}\n\nPlease confirm receipt and send our commercial Proforma Invoice at your earliest convenience.`
+    );
+    const waLink = `https://wa.me/${cleanWhatsAppNumber}?text=${waText}`;
+
     return (
-      <section id="contact" className="py-20 bg-[#fafcf9] text-[#1b3e2b]">
-        <div className="max-w-2xl mx-auto px-4 text-center space-y-6 bg-white p-10 rounded-[32px] border border-emerald-900/10 shadow-xl">
-          <div className="w-20 h-20 rounded-full bg-emerald-100 text-[#258746] flex items-center justify-center mx-auto shadow-inner">
+      <section className="py-20 bg-gradient-to-b from-[#f4fbf6] to-[#fafdfa] text-center px-4">
+        <div className="max-w-2xl mx-auto bg-white border border-emerald-500/30 rounded-3xl p-8 sm:p-12 shadow-2xl space-y-6">
+          <div className="w-20 h-20 rounded-full bg-emerald-100 text-[#258746] flex items-center justify-center mx-auto shadow-inner ring-8 ring-emerald-50">
             <CheckCircle2 className="w-10 h-10" />
           </div>
+
           <div className="space-y-3">
-            <h2 className="text-3xl font-extrabold font-serif text-[#1b3e2b]">
-              Quote Request Sent Successfully!
+            <span className="inline-block px-3 py-1 bg-emerald-100 text-[#1b6a36] text-xs font-bold rounded-full uppercase tracking-wider">
+              RFQ Confirmed & Saved
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold font-serif text-[#1b3e2b]">
+              Quotation Request Received!
             </h2>
             <p className="text-sm text-gray-600 font-medium">
-              Reference Code:{' '}
-              <span className="font-mono font-bold text-[#258746] bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200">
-                {successRef}
+              Official Reference Number:{' '}
+              <span className="font-mono font-black text-[#258746] bg-emerald-50 px-3 py-1 rounded-lg border border-emerald-200">
+                {successInfo.rfq_number}
               </span>
             </p>
-            <p className="text-xs text-gray-500 max-w-md mx-auto leading-relaxed pt-2">
-              Thank you! Our commercial export manager will review your shipment requirements and email your official Proforma Invoice within 24 business hours.
+            <p className="text-sm text-gray-600 max-w-lg mx-auto leading-relaxed pt-2">
+              Thank you, <strong className="text-gray-900">{successInfo.company_name}</strong>! Your requirements have been logged directly into our export management desk. Our commercial export manager will email your official Proforma Invoice within <strong>24 business hours</strong>.
             </p>
           </div>
-          <div className="pt-4">
-            <button
-              onClick={() => setSuccessRef(null)}
-              className="px-8 py-3 bg-[#258746] hover:bg-[#1b6a36] text-white font-bold rounded-2xl shadow-md transition-all cursor-pointer"
+
+          {/* Quick WhatsApp Action Box */}
+          <div className="bg-[#1b3e2b] text-white p-6 rounded-2xl space-y-3 text-left shadow-lg">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-full bg-[#25d366]/20 text-[#25d366] flex items-center justify-center">
+                <MessageSquare className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="font-bold text-sm text-white">Need an urgent freight rate / ETD?</h4>
+                <p className="text-xs text-emerald-200/80">Connect directly with our Export Sales Desk via WhatsApp.</p>
+              </div>
+            </div>
+            <a
+              href={waLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full mt-2 inline-flex items-center justify-center gap-2 py-3 px-6 bg-[#25d366] hover:bg-[#20ba59] text-gray-950 font-black rounded-xl transition-all shadow-md hover:scale-[1.01]"
             >
-              Send Another Request
+              <MessageSquare className="w-4 h-4 fill-current" />
+              <span>Send Order Reference on WhatsApp</span>
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              onClick={() => setSuccessInfo(null)}
+              className="w-full sm:w-auto px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-xl transition-all cursor-pointer"
+            >
+              Submit Another Inquiry
             </button>
+            <Link
+              href={`/${currentLocale}/products`}
+              className="w-full sm:w-auto px-6 py-2.5 bg-[#258746] hover:bg-[#1b6a36] text-white text-xs font-bold rounded-xl transition-all"
+            >
+              Browse More Produce
+            </Link>
           </div>
         </div>
       </section>
@@ -172,172 +258,267 @@ export function RFQForm({ currentLocale }: { currentLocale: Locale }) {
 
   return (
     <section id="contact" className="py-16 sm:py-20 bg-[#fafdfa] text-[#1b3e2b] relative overflow-hidden">
-      {/* Decorative Botanical Leaves top right (pawel-about.svg) */}
+      {/* Botanical background element */}
       <div className="absolute top-0 right-0 pointer-events-none z-0">
         <Image
-          src="/assets/pawel-about.svg"
+          src="/assets/pawel-about.png"
           alt="Natural Green Leaves"
           width={280}
           height={240}
-          className="object-contain opacity-90"
+          className="object-contain opacity-85"
         />
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 relative z-10">
         {/* Section Header */}
         <div className="space-y-2">
+          <span className="text-xs font-black uppercase tracking-widest text-[#258746] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+            B2B Commercial Desk
+          </span>
           <h1 className="text-4xl sm:text-5xl font-black font-serif text-[#1b3e2b] tracking-tight">
-            Request a Quote
+            Request an Export Quotation
           </h1>
-          <p className="text-sm sm:text-base text-gray-500 font-medium">
-            Fill In Your Details And We'll Get Back To You Within 24 Hours.
+          <p className="text-sm sm:text-base text-gray-600 font-medium">
+            Direct Egyptian agricultural export supply. Proforma invoices issued within 24 business hours.
           </p>
         </div>
 
-        {/* Main Form Box */}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-12">
-          {/* SECTION 1: CUSTOMER DETAILS */}
+        {/* ERROR BANNER IF SERVER FAILED (No silent false success) */}
+        {submitError && (
+          <div className="p-5 bg-rose-50 border-2 border-rose-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-rose-900 animate-in fade-in">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="w-6 h-6 text-rose-600 shrink-0" />
+              <div>
+                <h4 className="font-bold text-sm">Submission Issue: {submitError}</h4>
+                <p className="text-xs text-rose-700">
+                  Don't worry, you can forward your specifications directly to our export manager on WhatsApp right now:
+                </p>
+              </div>
+            </div>
+            {lastSubmittedData && (
+              <a
+                href={`https://wa.me/${cleanWhatsAppNumber}?text=${encodeURIComponent(
+                  `Hello Golden Sun, I encountered a connection issue on the website. I would like a quote for:\nCompany: ${lastSubmittedData.company_name}\nPort: ${lastSubmittedData.port_of_discharge}, ${lastSubmittedData.country}\nIncoterm: ${lastSubmittedData.incoterm}`
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 px-4 py-2 bg-[#25d366] text-gray-950 font-bold text-xs rounded-xl shadow hover:bg-[#20ba59] transition-colors flex items-center gap-1.5"
+              >
+                <MessageSquare className="w-3.5 h-3.5" />
+                <span>Send via WhatsApp Now</span>
+              </a>
+            )}
+          </div>
+        )}
+
+        {/* Main Form */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+          {/* SECTION 1: COMMERCIAL BUYER DETAILS */}
           <div className="space-y-6 bg-white p-6 sm:p-10 rounded-[32px] border border-emerald-900/10 shadow-sm">
-            <h2 className="text-lg font-extrabold text-[#1b3e2b] tracking-wide border-b border-gray-100 pb-3">
-              Customer Details
-            </h2>
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <h2 className="text-lg font-extrabold text-[#1b3e2b] flex items-center gap-2">
+                <Building2 className="w-5 h-5 text-[#258746]" />
+                <span>Commercial Buyer Profile</span>
+              </h2>
+              <span className="text-xs text-gray-400 font-medium">* Required fields</span>
+            </div>
 
-            {/* Row 1: First Name, Last Name, Company Name */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Company Name */}
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">First name*</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5 flex items-center gap-1">
+                  <Building2 className="w-3.5 h-3.5 text-gray-400" />
+                  <span>Company / Importer Name*</span>
+                </label>
                 <input
                   type="text"
-                  placeholder="Your first name"
-                  {...register('first_name')}
-                  className={`w-full px-4 py-3 rounded-xl bg-[#fdfefd] border ${
-                    errors.first_name ? 'border-red-400' : 'border-gray-200'
-                  } text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all`}
-                />
-                {errors.first_name && <p className="text-xs text-red-500 mt-1 font-semibold">{errors.first_name.message}</p>}
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Last name*</label>
-                <input
-                  type="text"
-                  placeholder="Your last name"
-                  {...register('last_name')}
-                  className={`w-full px-4 py-3 rounded-xl bg-[#fdfefd] border ${
-                    errors.last_name ? 'border-red-400' : 'border-gray-200'
-                  } text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all`}
-                />
-                {errors.last_name && <p className="text-xs text-red-500 mt-1 font-semibold">{errors.last_name.message}</p>}
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Company Name (optional)</label>
-                <input
-                  type="text"
-                  placeholder="Company name"
+                  placeholder="e.g. Nordic Agro Imports GmbH"
                   {...register('company_name')}
-                  className="w-full px-4 py-3 rounded-xl bg-[#fdfefd] border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all"
+                  className={`w-full px-4 py-3 rounded-xl bg-[#fdfefd] border ${
+                    errors.company_name ? 'border-red-400' : 'border-gray-200'
+                  } text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all`}
                 />
-              </div>
-            </div>
-
-            {/* Row 2: Street Address */}
-            <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1.5">Street Address*</label>
-              <input
-                type="text"
-                placeholder="Address"
-                {...register('street_address')}
-                className={`w-full px-4 py-3 rounded-xl bg-[#fdfefd] border ${
-                  errors.street_address ? 'border-red-400' : 'border-gray-200'
-                } text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all`}
-              />
-              {errors.street_address && <p className="text-xs text-red-500 mt-1 font-semibold">{errors.street_address.message}</p>}
-            </div>
-
-            {/* Row 3: Country & State */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Country / Region*</label>
-                <select
-                  {...register('country')}
-                  className="w-full px-4 py-3 rounded-xl bg-[#fdfefd] border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all cursor-pointer"
-                >
-                  <option value="">Select country...</option>
-                  <option value="Germany">Germany (EU)</option>
-                  <option value="Netherlands">Netherlands (Port of Rotterdam)</option>
-                  <option value="Spain">Spain (Port of Valencia)</option>
-                  <option value="United Kingdom">United Kingdom</option>
-                  <option value="United States">United States</option>
-                  <option value="Saudi Arabia">Saudi Arabia</option>
-                  <option value="UAE">United Arab Emirates</option>
-                  <option value="Other">Other Country</option>
-                </select>
-                {errors.country && <p className="text-xs text-red-500 mt-1 font-semibold">{errors.country.message}</p>}
+                {errors.company_name && (
+                  <p className="text-xs text-red-500 mt-1 font-semibold">{errors.company_name.message}</p>
+                )}
               </div>
 
+              {/* Contact Person Name */}
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">State / City (optional)</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5 flex items-center gap-1">
+                  <User className="w-3.5 h-3.5 text-gray-400" />
+                  <span>Contact Person Full Name*</span>
+                </label>
                 <input
                   type="text"
-                  placeholder="Select state or city"
-                  {...register('state')}
-                  className="w-full px-4 py-3 rounded-xl bg-[#fdfefd] border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all"
+                  placeholder="e.g. Hans Mueller"
+                  {...register('contact_name')}
+                  className={`w-full px-4 py-3 rounded-xl bg-[#fdfefd] border ${
+                    errors.contact_name ? 'border-red-400' : 'border-gray-200'
+                  } text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all`}
                 />
+                {errors.contact_name && (
+                  <p className="text-xs text-red-500 mt-1 font-semibold">{errors.contact_name.message}</p>
+                )}
               </div>
-            </div>
 
-            {/* Row 4: Email & Phone */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Business Email */}
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Email*</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5 flex items-center gap-1">
+                  <Mail className="w-3.5 h-3.5 text-gray-400" />
+                  <span>Business Email*</span>
+                </label>
                 <input
                   type="email"
-                  placeholder="Email Address"
+                  placeholder="purchasing@company.com"
                   {...register('email')}
                   className={`w-full px-4 py-3 rounded-xl bg-[#fdfefd] border ${
                     errors.email ? 'border-red-400' : 'border-gray-200'
                   } text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all`}
                 />
-                {errors.email && <p className="text-xs text-red-500 mt-1 font-semibold">{errors.email.message}</p>}
+                {errors.email && (
+                  <p className="text-xs text-red-500 mt-1 font-semibold">{errors.email.message}</p>
+                )}
               </div>
 
+              {/* WhatsApp / Phone */}
               <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Phone*</label>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5 flex items-center gap-1">
+                  <Phone className="w-3.5 h-3.5 text-gray-400" />
+                  <span>WhatsApp / Direct Phone (with country code)*</span>
+                </label>
                 <input
                   type="tel"
-                  placeholder="Phone number"
-                  {...register('phone')}
+                  placeholder="+49 170 555 4321"
+                  {...register('phone_whatsapp')}
                   className={`w-full px-4 py-3 rounded-xl bg-[#fdfefd] border ${
-                    errors.phone ? 'border-red-400' : 'border-gray-200'
+                    errors.phone_whatsapp ? 'border-red-400' : 'border-gray-200'
                   } text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all`}
                 />
-                {errors.phone && <p className="text-xs text-red-500 mt-1 font-semibold">{errors.phone.message}</p>}
+                {errors.phone_whatsapp && (
+                  <p className="text-xs text-red-500 mt-1 font-semibold">{errors.phone_whatsapp.message}</p>
+                )}
               </div>
             </div>
           </div>
 
-          {/* SECTION 2: ORDER DETAILS */}
+          {/* SECTION 2: DESTINATION & SHIPPING TERMS */}
+          <div className="space-y-6 bg-white p-6 sm:p-10 rounded-[32px] border border-emerald-900/10 shadow-sm">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+              <h2 className="text-lg font-extrabold text-[#1b3e2b] flex items-center gap-2">
+                <Anchor className="w-5 h-5 text-[#258746]" />
+                <span>Shipping & Destination Specs</span>
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {/* Destination Country */}
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5 flex items-center gap-1">
+                  <Globe className="w-3.5 h-3.5 text-gray-400" />
+                  <span>Destination Country*</span>
+                </label>
+                <select
+                  {...register('country')}
+                  className={`w-full px-4 py-3 rounded-xl bg-[#fdfefd] border ${
+                    errors.country ? 'border-red-400' : 'border-gray-200'
+                  } text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all cursor-pointer`}
+                >
+                  <option value="">Select country...</option>
+                  <option value="Netherlands">Netherlands (Port of Rotterdam)</option>
+                  <option value="Germany">Germany (Hamburg / Bremerhaven)</option>
+                  <option value="United Kingdom">United Kingdom (London Gateway / Felixstowe)</option>
+                  <option value="Spain">Spain (Valencia / Algeciras)</option>
+                  <option value="Italy">Italy (Genoa / Trieste)</option>
+                  <option value="France">France (Marseille / Le Havre)</option>
+                  <option value="United States">United States</option>
+                  <option value="Saudi Arabia">Saudi Arabia (Jeddah / Dammam)</option>
+                  <option value="United Arab Emirates">United Arab Emirates (Jebel Ali)</option>
+                  <option value="Other">Other Global Destination</option>
+                </select>
+                {errors.country && (
+                  <p className="text-xs text-red-500 mt-1 font-semibold">{errors.country.message}</p>
+                )}
+              </div>
+
+              {/* Port of Discharge (replaces street_address) */}
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5 flex items-center gap-1">
+                  <Anchor className="w-3.5 h-3.5 text-gray-400" />
+                  <span>Port of Discharge (POD)*</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Rotterdam / Hamburg / Jebel Ali"
+                  {...register('port_of_discharge')}
+                  className={`w-full px-4 py-3 rounded-xl bg-[#fdfefd] border ${
+                    errors.port_of_discharge ? 'border-red-400' : 'border-gray-200'
+                  } text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all`}
+                />
+                {errors.port_of_discharge && (
+                  <p className="text-xs text-red-500 mt-1 font-semibold">{errors.port_of_discharge.message}</p>
+                )}
+              </div>
+
+              {/* Incoterm */}
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">Trade Incoterm*</label>
+                <select
+                  {...register('incoterm')}
+                  className="w-full px-4 py-3 rounded-xl bg-[#fdfefd] border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all cursor-pointer"
+                >
+                  <option value="FOB">FOB (Alexandria / Damietta Port)</option>
+                  <option value="CIF">CIF (Cost, Insurance & Freight to POD)</option>
+                  <option value="CFR">CFR (Cost and Freight)</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+              {/* Shipping Method */}
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">Freight Mode</label>
+                <select
+                  {...register('shipping_method')}
+                  className="w-full px-4 py-3 rounded-xl bg-[#fdfefd] border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all cursor-pointer"
+                >
+                  <option value="Sea Reefer Container (40ft HC)">Sea Reefer Container (40ft High Cube ~20-25 MT)</option>
+                  <option value="Sea Reefer Container (20ft)">Sea Reefer Container (20ft ~10-12 MT)</option>
+                  <option value="Air Freight Express">Air Freight (High-Value / Express Produce)</option>
+                  <option value="Land Reefer Truck">Land Reefer Truck (Regional MENA)</option>
+                </select>
+              </div>
+
+              {/* Target ETD / Delivery */}
+              <div>
+                <label className="block text-xs font-bold text-gray-700 mb-1.5">Estimated Shipment Date (ETD)</label>
+                <input
+                  type="date"
+                  {...register('estimated_etd')}
+                  className="w-full px-4 py-3 rounded-xl bg-[#fdfefd] border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION 3: PRODUCE & TONNAGE */}
           <div className="space-y-6 bg-white p-6 sm:p-10 rounded-[32px] border border-emerald-900/10 shadow-sm">
             <div className="flex items-center justify-between border-b border-gray-100 pb-3 flex-wrap gap-2">
-              <h2 className="text-lg font-extrabold text-[#1b3e2b] tracking-wide">
-                Order Details
+              <h2 className="text-lg font-extrabold text-[#1b3e2b] flex items-center gap-2">
+                <Package className="w-5 h-5 text-[#258746]" />
+                <span>Requested Produce Items</span>
               </h2>
 
               {items.length > 0 && (
                 <span className="px-3 py-1 rounded-full bg-emerald-100 text-[#258746] text-xs font-black">
-                  {items.length} Selected Produce Items
+                  {items.length} Item(s) in Quote Basket
                 </span>
               )}
             </div>
 
-            {/* MULTIPLE SELECTED ITEMS BASKET LIST (When items chosen) */}
-            {items.length > 0 && (
-              <div className="space-y-3 bg-[#fbfdfa] p-4 sm:p-5 rounded-2xl border border-emerald-900/10 mb-6">
-                <span className="block text-xs font-extrabold uppercase tracking-wider text-gray-500 mb-2">
-                  Selected Produce Items ({items.length})
-                </span>
-
+            {/* If basket has items */}
+            {items.length > 0 ? (
+              <div className="space-y-3 bg-[#fbfdfa] p-4 sm:p-5 rounded-2xl border border-emerald-900/10">
                 <div className="space-y-2.5">
                   {items.map((item) => (
                     <div
@@ -351,29 +532,28 @@ export function RFQForm({ currentLocale }: { currentLocale: Locale }) {
                         <div>
                           <h4 className="text-sm font-extrabold text-[#1b3e2b]">{item.product_name}</h4>
                           <span className="text-[11px] text-gray-500 font-medium">
-                            {item.preferred_packaging || 'Standard Packaging'}
+                            Packaging: {item.preferred_packaging || 'Standard Export Box'}
                           </span>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-gray-500">Qty:</span>
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center border border-gray-200 rounded-lg bg-[#fdfefd] px-2 py-1">
                           <input
                             type="number"
                             min="1"
+                            max="5000"
                             value={item.quantity_tons}
-                            onChange={(e) => updateQuantity(item.product_id, Math.max(1, parseInt(e.target.value) || 1))}
-                            className="w-16 px-2 py-1 text-center font-extrabold text-xs rounded-lg border border-gray-300 focus:border-[#258746] focus:outline-none"
+                            onChange={(e) => updateQuantity(item.product_id, Math.max(1, Number(e.target.value)))}
+                            className="w-14 text-center font-bold text-xs text-[#1b3e2b] focus:outline-none"
                           />
-                          <span className="text-xs font-bold text-gray-600">Tons</span>
+                          <span className="text-[10px] text-gray-400 font-bold uppercase">{item.quantity_tons === 1 ? 'Container' : 'Containers'}</span>
                         </div>
-
                         <button
                           type="button"
                           onClick={() => removeItem(item.product_id)}
-                          className="text-red-400 hover:text-red-600 p-1.5 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
-                          title="Remove product"
+                          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                          title="Remove item"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -382,112 +562,51 @@ export function RFQForm({ currentLocale }: { currentLocale: Locale }) {
                   ))}
                 </div>
               </div>
-            )}
+            ) : (
+              /* Fallback selector when basket is empty */
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-emerald-50/40 p-5 rounded-2xl border border-emerald-100">
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Select Primary Produce*</label>
+                  <select
+                    value={selectedProductId || ''}
+                    onChange={(e) => handleSelectProduct(e.target.value)}
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] transition-all cursor-pointer"
+                  >
+                    <option value="">Choose Egyptian crop...</option>
+                    {productsList.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.translations[currentLocale]?.name || p.translations.en?.name || p.slug}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-            {/* ORDER PARAMETERS GRID */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {/* Product selector dropdown */}
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Product</label>
-                <select
-                  value={selectedProductId || ''}
-                  onChange={(e) => handleSelectProduct(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl bg-[#fdfefd] border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all cursor-pointer"
-                >
-                  <option value="">Select produce item...</option>
-                  {mockProducts.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.translations[currentLocale]?.name || p.translations.en.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Box Size */}
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Box Size</label>
-                <select
-                  {...register('box_size')}
-                  className="w-full px-4 py-3 rounded-xl bg-[#fdfefd] border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all cursor-pointer"
-                >
-                  <option value="">Select box size...</option>
-                  <option value="5kg Box">5kg Export Box</option>
-                  <option value="10kg Box">10kg Telescope Carton</option>
-                  <option value="15kg Box">15kg Open Top Carton</option>
-                  <option value="20kg Box">20kg Bulk Packaging</option>
-                  <option value="Custom Size">Custom Packaging Size</option>
-                </select>
-              </div>
-
-              {/* Quantity */}
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Quantity (Boxes / Tons)</label>
-                <input
-                  type="text"
-                  placeholder="e.g. 10 Boxes or 24 Metric Tons"
-                  {...register('quantity')}
-                  className="w-full px-4 py-3 rounded-xl bg-[#fdfefd] border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all"
-                />
-              </div>
-
-              {/* Incoterm */}
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Incoterm</label>
-                <select
-                  {...register('incoterm')}
-                  className="w-full px-4 py-3 rounded-xl bg-[#fdfefd] border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all cursor-pointer"
-                >
-                  <option value="FOB">FOB (Free on Board - Alexandria / Port Said)</option>
-                  <option value="CIF">CIF (Cost, Insurance & Freight)</option>
-                  <option value="CFR">CFR (Cost & Freight)</option>
-                </select>
-              </div>
-
-              {/* Shipping Method */}
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Shipping Method</label>
-                <select
-                  {...register('shipping_method')}
-                  className="w-full px-4 py-3 rounded-xl bg-[#fdfefd] border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all cursor-pointer"
-                >
-                  <option value="Sea Reefer Container (40ft HC)">Sea Reefer Container (40ft High Cube)</option>
-                  <option value="Sea Reefer Container (20ft)">Sea Reefer Container (20ft)</option>
-                  <option value="Air Freight">Air Freight (Express Produce)</option>
-                  <option value="Land Transport">Land Reefer Truck</option>
-                </select>
-              </div>
-
-              {/* Target Delivery Date */}
-              <div>
-                <label className="block text-xs font-bold text-gray-700 mb-1.5">Target Delivery Date</label>
-                <div className="relative">
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1.5">Containers (40ft Reefer)*</label>
                   <input
-                    type="date"
-                    {...register('target_delivery_date')}
-                    className="w-full px-4 py-3 rounded-xl bg-[#fdfefd] border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all"
+                    type="number"
+                    min="1"
+                    placeholder="1"
+                    {...register('quantity')}
+                    className="w-full px-4 py-3 rounded-xl bg-white border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] transition-all"
                   />
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
-          {/* SECTION 3: ADDITIONAL INFO */}
-          <div className="space-y-6 bg-white p-6 sm:p-10 rounded-[32px] border border-emerald-900/10 shadow-sm">
-            <h2 className="text-lg font-extrabold text-[#1b3e2b] tracking-wide border-b border-gray-100 pb-3">
-              Additional Info
-            </h2>
-
+          {/* SECTION 4: NOTES & GDPR */}
+          <div className="space-y-5 bg-white p-6 sm:p-10 rounded-[32px] border border-emerald-900/10 shadow-sm">
             <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1.5">Order Notes (Optional)</label>
+              <label className="block text-xs font-bold text-gray-700 mb-1.5">Special Technical Notes (Optional)</label>
               <textarea
-                rows={4}
-                placeholder="Notes about your order, e.g. special notes for delivery, Brix target, sizing preferences..."
+                rows={3}
+                placeholder="Mention required counts/calibers, Brix levels, specific carton labels, or certifications required (GLOBALG.A.P., SMETA, etc.)..."
                 {...register('notes')}
                 className="w-full px-4 py-3 rounded-xl bg-[#fdfefd] border border-gray-200 text-sm font-medium text-[#1b3e2b] focus:outline-none focus:border-[#258746] focus:ring-2 focus:ring-[#258746]/20 transition-all"
               />
             </div>
 
-            {/* GDPR Consent */}
             <div className="pt-2">
               <label className="flex items-start gap-3 cursor-pointer select-none">
                 <input
@@ -496,7 +615,7 @@ export function RFQForm({ currentLocale }: { currentLocale: Locale }) {
                   className="mt-0.5 w-4 h-4 rounded border-gray-300 text-[#258746] focus:ring-[#258746] cursor-pointer"
                 />
                 <span className="text-xs text-gray-600 font-medium leading-relaxed">
-                  I agree to the processing of my business data to process this quotation request in accordance with the{' '}
+                  I agree to the processing of our commercial inquiry details for the purpose of receiving an official export quotation in accordance with the{' '}
                   <Link href={`/${currentLocale}/privacy-policy`} className="underline font-bold text-[#258746]">
                     Privacy Policy
                   </Link>.
@@ -509,17 +628,17 @@ export function RFQForm({ currentLocale }: { currentLocale: Locale }) {
           </div>
 
           {/* SUBMIT BUTTON */}
-          <div className="pt-4 text-center">
+          <div className="pt-2 text-center">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full max-w-md mx-auto py-4 px-8 bg-[#258746] hover:bg-[#1b6a36] text-white text-lg sm:text-xl font-extrabold font-serif rounded-full sm:rounded-2xl shadow-xl shadow-emerald-700/25 hover:shadow-2xl hover:scale-[1.01] transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full max-w-md mx-auto py-4 px-8 bg-[#258746] hover:bg-[#1b6a36] text-white text-lg sm:text-xl font-extrabold font-serif rounded-full shadow-xl shadow-emerald-700/25 hover:shadow-2xl hover:scale-[1.01] transition-all cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isSubmitting ? (
-                <span>Processing...</span>
+                <span>Submitting to Export Desk...</span>
               ) : (
                 <>
-                  <span>Send Request</span>
+                  <span>Submit Official RFQ</span>
                   <Send className="w-5 h-5" />
                 </>
               )}

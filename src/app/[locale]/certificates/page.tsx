@@ -1,28 +1,37 @@
 import React from 'react';
 import Link from 'next/link';
-import { ShieldCheck, CheckCircle2, Award, FlaskConical, ThermometerSnowflake, FileCheck, ArrowRight, Phone } from 'lucide-react';
+import { setRequestLocale } from 'next-intl/server';
+import { 
+  ShieldCheck, 
+  CheckCircle2, 
+  FlaskConical, 
+  ThermometerSnowflake, 
+  FileCheck, 
+  ArrowRight, 
+  BadgeCheck
+} from 'lucide-react';
 import { Locale } from '@/types';
 import { LeafBadgeIcon } from '@/components/ui/LeafBadgeIcon';
 import './certificates.css';
 
 const certSeo = {
   en: {
-    title: 'Global Quality & Food Safety Accreditations | Golden Sun Export',
-    description: 'Golden Sun Agricultural Export holds global certifications: GLOBALG.A.P., GRASP, BRCGS, ISO 22000, KOSHER & FDA for zero chemical residue compliance.',
+    title: 'Official Export Certifications | Golden Sun Agricultural Operations',
+    description: 'Golden Sun holds official international accreditations: GLOBALG.A.P., GRASP, SEDEX, and BRCGS Food Safety for fresh fruit and vegetable exports.',
   },
   de: {
-    title: 'Qualitätszertifikate & Lebensmittelsicherheit | Golden Sun Agrarexport',
-    description: 'Golden Sun ist nach europäischen Standards zertifiziert: GLOBALG.A.P., GRASP, BRCGS, ISO 22000 und KOSHER für 100% rückstandsfreie Frische.',
+    title: 'Offizielle Exportzertifikate | Golden Sun Agrarexport Ägypten',
+    description: 'Golden Sun verfügt über offizielle internationale Zertifikate: GLOBALG.A.P., GRASP, SEDEX und BRCGS Lebensmittelsicherheit.',
   },
   es: {
-    title: 'Certificaciones de Calidad Global e Inocuidad | Golden Sun Export',
-    description: 'Golden Sun cuenta con certificaciones internacionales: GLOBALG.A.P., GRASP, BRCGS, ISO 22000 y KOSHER para exportación a la Unión Europea.',
+    title: 'Certificaciones Oficiales de Exportación | Golden Sun Export',
+    description: 'Golden Sun cuenta con acreditaciones internacionales verificadas: GLOBALG.A.P., GRASP, SEDEX y BRCGS Inocuidad Alimentaria.',
   },
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const resolvedParams = await params;
-  const locale = (resolvedParams.locale as Locale) || 'en';
+  const locale = (resolvedParams?.locale || 'en') as Locale;
   const seo = certSeo[locale] || certSeo.en;
 
   return {
@@ -34,12 +43,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         en: 'https://sungolden-eg.com/en/certificates',
         de: 'https://sungolden-eg.com/de/certificates',
         es: 'https://sungolden-eg.com/es/certificates',
+        'x-default': 'https://sungolden-eg.com/en/certificates',
       },
     },
     openGraph: {
       title: seo.title,
       description: seo.description,
       url: `https://sungolden-eg.com/${locale}/certificates`,
+      siteName: 'Golden Sun Agricultural Export',
       type: 'website',
     },
   };
@@ -47,7 +58,65 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function CertificatesPage({ params }: { params: Promise<{ locale: string }> }) {
   const resolvedParams = await params;
-  const locale = (resolvedParams.locale as Locale) || 'en';
+  const locale = (resolvedParams?.locale || 'en') as Locale;
+  setRequestLocale(locale);
+
+  const officialCerts = [
+    {
+      id: 'globalgap',
+      tag: 'Farm Assurance',
+      title: 'GLOBALG.A.P. Certified',
+      desc: 'Sustainable farm production, soil/water conservation, and European MRL chemical residue compliance.',
+      scope: ['Valencia Oranges', 'Sweet Potatoes', 'Garlic', 'Strawberries', 'Pomegranates'],
+      logoSvg: (
+        <svg width="190" height="55" viewBox="0 0 220 75" fill="none">
+          <path d="M40 10C23.4 10 10 23.4 10 40C10 56.6 23.4 70 40 70C51.4 70 61.3 63.6 66.2 54.2H40V41.5H88.5C89.5 45.8 90 50.3 90 55C90 79.8 69.8 100 45 100C20.2 100 0 79.8 0 55C0 30.2 20.2 10 45 10Z" fill="#228731" transform="scale(0.48)" />
+          <text x="55" y="42" fill="#228731" fontSize="22" fontWeight="900" fontFamily="Inter, sans-serif" letterSpacing="0.03em">GLOBALG.A.P.</text>
+          <text x="55" y="58" fill="#666" fontSize="10" fontWeight="700" fontFamily="Inter, sans-serif">Certified Farm Production</text>
+        </svg>
+      ),
+    },
+    {
+      id: 'grasp',
+      tag: 'Social Compliance',
+      title: 'GRASP Social Practice',
+      desc: 'Fair labor standards, worker health & safety, ethical remuneration, and human rights compliance.',
+      scope: ['Worker Welfare', 'Fair Remuneration', 'Occupational Safety', 'Human Rights'],
+      logoSvg: (
+        <svg width="180" height="55" viewBox="0 0 200 75" fill="none">
+          <path d="M25 30C25 24 29 19 35 19C41 19 45 24 45 30V48H48V22C48 16 52 11 58 11C64 11 68 16 68 22V48H71V26C71 20 75 15 81 15C87 15 91 20 91 26V55C91 70 79 82 63 82C47 82 25 70 25 55V30Z" fill="#228731" transform="scale(0.5)" />
+          <text x="58" y="36" fill="#228731" fontSize="15" fontWeight="800" fontFamily="Inter, sans-serif">GLOBALG.A.P.</text>
+          <text x="58" y="56" fill="#228731" fontSize="19" fontWeight="900" fontFamily="Inter, sans-serif">GRASP</text>
+        </svg>
+      ),
+    },
+    {
+      id: 'sedex',
+      tag: 'Ethical Trade',
+      title: 'SEDEX Ethical Trade',
+      desc: 'Supplier Ethical Data Exchange audit for continuous ethical, social, and sustainable supply chains.',
+      scope: ['Labor Rights', 'Health & Safety', 'Environmental Impact', 'Business Ethics'],
+      logoSvg: (
+        <svg width="180" height="55" viewBox="0 0 200 75" fill="none">
+          <text x="10" y="44" fill="#1b1b1b" fontSize="28" fontWeight="900" fontFamily="Inter, sans-serif" letterSpacing="-0.02em">Sedex</text>
+          <circle cx="82" cy="24" r="6" fill="#e51b24" />
+        </svg>
+      ),
+    },
+    {
+      id: 'brcgs',
+      tag: 'Food Safety Standard',
+      title: 'BRCGS Food Safety',
+      desc: 'Global Standard for Food Safety ensuring strict packhouse hygiene, grading, and cold chain controls.',
+      scope: ['HACCP Food Safety', 'Packhouse Hygiene', 'Optical Sorting', 'Cold Chain Control'],
+      logoSvg: (
+        <svg width="180" height="55" viewBox="0 0 200 75" fill="none">
+          <text x="10" y="38" fill="#388e3c" fontSize="26" fontWeight="900" fontFamily="Inter, sans-serif" letterSpacing="0.02em">BRCGS</text>
+          <text x="12" y="56" fill="#333333" fontSize="12" fontWeight="700" fontFamily="Inter, sans-serif">Food Safety</text>
+        </svg>
+      ),
+    },
+  ];
 
   return (
     <main className="cert-page-main">
@@ -56,283 +125,137 @@ export default async function CertificatesPage({ params }: { params: Promise<{ l
         {/* 1. HERO HEADER */}
         <header className="cert-hero-header">
           <div className="cert-hero-badge">
-            <LeafBadgeIcon className="w-4 h-4 text-[#228731]" />
-            <span>International Standards & Accreditations</span>
+            <LeafBadgeIcon className="w-3.5 h-3.5 text-[#228731]" />
+            <span>Accredited Quality Standards</span>
           </div>
 
           <h1 className="cert-hero-title">
-            <span className="cert-hero-title-dark">Certified For Global Quality, </span>
-            <span className="cert-hero-title-green">Traceability & Food Safety</span>
+            International Quality & <span className="text-[#228731]">Certifications</span>
           </h1>
 
           <p className="cert-hero-subtitle">
-            At Golden Sun, our fresh fruits, garlic, and frozen vegetables are cultivated, sorted, and packed strictly adhering to the highest international agricultural standards required by leading supermarket chains across the EU, UK, and Americas.
+            Ensuring 100% food safety, traceability, and European MRL chemical residue compliance across every export shipment.
           </p>
         </header>
 
-        {/* 2. FOUR TRUST HIGHLIGHTS */}
-        <div className="cert-trust-bar">
-          <div className="cert-trust-card">
-            <div className="cert-trust-icon-box">
-              <ShieldCheck className="w-6 h-6 text-[#228731]" />
+        {/* 2. THE 4 CERTIFICATE CARDS */}
+        <section className="cert-cards-section">
+          <div className="cert-cards-grid">
+            {officialCerts.map((cert) => (
+              <div key={cert.id} className="cert-card-item">
+                <div className="cert-card-top">
+                  <span className="cert-card-tag">{cert.tag}</span>
+                  <span className="cert-card-status">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#059669]" />
+                    <span>Verified</span>
+                  </span>
+                </div>
+
+                <div className="cert-card-logo-wrap">
+                  {cert.logoSvg}
+                </div>
+
+                <h3 className="cert-card-title">{cert.title}</h3>
+                <p className="cert-card-desc">{cert.desc}</p>
+
+                <div className="cert-card-scope">
+                  {cert.scope.map((tag, i) => (
+                    <span key={i} className="cert-scope-tag">{tag}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* 3. FOUR KEY TRUST INDICATORS */}
+        <div className="cert-trust-row">
+          <div className="cert-trust-item">
+            <ShieldCheck className="w-5 h-5 text-[#228731] flex-shrink-0" />
+            <div>
+              <h4 className="cert-trust-heading">100% Traceability</h4>
+              <p className="cert-trust-text">Plot-to-port batch tracking</p>
             </div>
-            <h3 className="cert-trust-title">100% Traceability</h3>
-            <p className="cert-trust-desc">Full batch tracking from registered farm plots to port of discharge.</p>
           </div>
 
-          <div className="cert-trust-card">
-            <div className="cert-trust-icon-box">
-              <FlaskConical className="w-6 h-6 text-[#228731]" />
+          <div className="cert-trust-item">
+            <FlaskConical className="w-5 h-5 text-[#228731] flex-shrink-0" />
+            <div>
+              <h4 className="cert-trust-heading">Zero Residue (MRL)</h4>
+              <p className="cert-trust-text">EU chemical limits tested</p>
             </div>
-            <h3 className="cert-trust-title">Zero Residue (MRL)</h3>
-            <p className="cert-trust-desc">Pre-harvest lab testing ensuring total compliance with EU chemical limit directives.</p>
           </div>
 
-          <div className="cert-trust-card">
-            <div className="cert-trust-icon-box">
-              <ThermometerSnowflake className="w-6 h-6 text-[#228731]" />
+          <div className="cert-trust-item">
+            <ThermometerSnowflake className="w-5 h-5 text-[#228731] flex-shrink-0" />
+            <div>
+              <h4 className="cert-trust-heading">Cold Chain Logged</h4>
+              <p className="cert-trust-text">Continuous reefer sensors</p>
             </div>
-            <h3 className="cert-trust-title">Continuous Cold Chain</h3>
-            <p className="cert-trust-desc">Automated temperature and humidity logging across all reefer containers.</p>
           </div>
 
-          <div className="cert-trust-card">
-            <div className="cert-trust-icon-box">
-              <FileCheck className="w-6 h-6 text-[#228731]" />
+          <div className="cert-trust-item">
+            <FileCheck className="w-5 h-5 text-[#228731] flex-shrink-0" />
+            <div>
+              <h4 className="cert-trust-heading">Phytosanitary Clean</h4>
+              <p className="cert-trust-text">Ministry export clearance</p>
             </div>
-            <h3 className="cert-trust-title">Phytosanitary Cleared</h3>
-            <p className="cert-trust-desc">Official Egyptian Ministry of Agriculture export clearance with every bill of lading.</p>
           </div>
         </div>
 
-        {/* 3. SIX OFFICIAL ACCREDITATION CARDS */}
-        <section className="cert-grid-section">
-          <div className="cert-section-heading">
-            <div>
-              <h2 className="cert-section-title">Official Accreditation Portfolio</h2>
-              <p className="text-sm text-gray-500 font-medium mt-1">Verified compliance standards held by Golden Sun for international trade</p>
-            </div>
-            <span className="text-xs font-bold text-[#228731] bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200/60">
-              ✓ Fully Audited & Validated 2026
-            </span>
+        {/* 4. QUALITY PROTOCOLS */}
+        <section className="cert-protocol-box">
+          <div className="cert-protocol-header">
+            <span className="cert-protocol-tag">Quality Assurance Protocol</span>
+            <h2 className="cert-protocol-title">From Farm Harvest to Port Clearance</h2>
           </div>
 
-          <div className="cert-cards-grid">
-            
-            {/* CERT 1: GLOBALG.A.P. IFA v6.0 */}
-            <div className="cert-showcase-card">
-              <div className="cert-card-badge-top">
-                <span>Integrated Farm Assurance</span>
-              </div>
-              <div className="cert-card-logo-wrap">
-                <svg width="220" height="75" viewBox="0 0 220 75" fill="none">
-                  <path d="M40 10C23.4 10 10 23.4 10 40C10 56.6 23.4 70 40 70C51.4 70 61.3 63.6 66.2 54.2H40V41.5H88.5C89.5 45.8 90 50.3 90 55C90 79.8 69.8 100 45 100C20.2 100 0 79.8 0 55C0 30.2 20.2 10 45 10Z" fill="#228731" transform="scale(0.5)" />
-                  <text x="60" y="44" fill="#228731" fontSize="22" fontWeight="900" fontFamily="Inter, sans-serif" letterSpacing="0.04em">GLOBALG.A.P.</text>
-                  <text x="60" y="60" fill="#666" fontSize="10" fontWeight="700" fontFamily="Inter, sans-serif">IFA Version 6.0 Compliant</text>
-                </svg>
-              </div>
-              <h3 className="cert-card-title">GLOBALG.A.P. IFA</h3>
-              <p className="cert-card-desc">
-                Certifies safe, sustainable agricultural production, soil and water conservation, responsible chemical use, and occupational health and safety across all our contracted farms.
-              </p>
-              <div className="cert-card-scope-box">
-                <span className="cert-scope-label">Certified Produce Scope:</span>
-                <div className="cert-scope-tags">
-                  <span className="cert-tag">Valencia Oranges</span>
-                  <span className="cert-tag">Strawberries</span>
-                  <span className="cert-tag">Fresh Garlic</span>
-                  <span className="cert-tag">Pomegranates</span>
-                </div>
-              </div>
+          <div className="cert-protocol-steps">
+            <div className="cert-step-card">
+              <span className="cert-step-num">01</span>
+              <h4 className="cert-step-title">Lab MRL Testing</h4>
+              <p className="cert-step-desc">Pre-harvest sampling tested at ISO 17025 accredited labs for 500+ chemical compounds.</p>
             </div>
 
-            {/* CERT 2: GRASP */}
-            <div className="cert-showcase-card">
-              <div className="cert-card-badge-top">
-                <span>Social & Labor Compliance</span>
-              </div>
-              <div className="cert-card-logo-wrap">
-                <svg width="200" height="75" viewBox="0 0 200 75" fill="none">
-                  <path d="M25 30C25 24 29 19 35 19C41 19 45 24 45 30V48H48V22C48 16 52 11 58 11C64 11 68 16 68 22V48H71V26C71 20 75 15 81 15C87 15 91 20 91 26V55C91 70 79 82 63 82C47 82 25 70 25 55V30Z" fill="#0080FF" transform="scale(0.55)" />
-                  <text x="65" y="38" fill="#0080FF" fontSize="16" fontWeight="800" fontFamily="Inter, sans-serif">GLOBALG.A.P.</text>
-                  <text x="65" y="58" fill="#0080FF" fontSize="20" fontWeight="900" fontFamily="Inter, sans-serif">GRASP</text>
-                </svg>
-              </div>
-              <h3 className="cert-card-title">GRASP Social Practice</h3>
-              <p className="cert-card-desc">
-                Demonstrates good social management and ethical labor standards, protecting worker welfare, fair remuneration, and child labor prevention across all harvest operations.
-              </p>
-              <div className="cert-card-scope-box">
-                <span className="cert-scope-label">Audit Scope:</span>
-                <div className="cert-scope-tags">
-                  <span className="cert-tag">Fair Labor</span>
-                  <span className="cert-tag">Worker Rights</span>
-                  <span className="cert-tag">Health & Safety</span>
-                </div>
-              </div>
+            <div className="cert-step-card">
+              <span className="cert-step-num">02</span>
+              <h4 className="cert-step-title">Sanitized Grading</h4>
+              <p className="cert-step-desc">Washed with ozone-treated water, dried and calibrated by optical sorting machines.</p>
             </div>
 
-            {/* CERT 3: BRCGS Food Safety */}
-            <div className="cert-showcase-card">
-              <div className="cert-card-badge-top">
-                <span>Packhouse & Processing</span>
-              </div>
-              <div className="cert-card-logo-wrap">
-                <svg width="200" height="75" viewBox="0 0 200 75" fill="none">
-                  <rect x="5" y="10" width="48" height="48" rx="10" fill="#E60028" />
-                  <text x="12" y="44" fill="#ffffff" fontSize="24" fontWeight="900" fontFamily="Inter, sans-serif">BRC</text>
-                  <text x="62" y="34" fill="#1a1917" fontSize="18" fontWeight="900" fontFamily="Inter, sans-serif">BRCGS</text>
-                  <text x="62" y="52" fill="#E60028" fontSize="11" fontWeight="800" fontFamily="Inter, sans-serif">Food Safety Grade A</text>
-                </svg>
-              </div>
-              <h3 className="cert-card-title">BRCGS Food Safety</h3>
-              <p className="cert-card-desc">
-                Global Standard for Food Safety covering automated optical grading, packhouse hygiene, foreign body detection, and cold chain integrity in sorting centers.
-              </p>
-              <div className="cert-card-scope-box">
-                <span className="cert-scope-label">Facility Scope:</span>
-                <div className="cert-scope-tags">
-                  <span className="cert-tag">Optical Sorting</span>
-                  <span className="cert-tag">IQF Freezing</span>
-                  <span className="cert-tag">Carton Packing</span>
-                </div>
-              </div>
+            <div className="cert-step-card">
+              <span className="cert-step-num">03</span>
+              <h4 className="cert-step-title">Quarantine Clearance</h4>
+              <p className="cert-step-desc">Official Egyptian Ministry of Agriculture phytosanitary inspection & certification.</p>
             </div>
 
-            {/* CERT 4: ISO 22000 & ISO 9001 */}
-            <div className="cert-showcase-card">
-              <div className="cert-card-badge-top">
-                <span>Management & HACCP</span>
-              </div>
-              <div className="cert-card-logo-wrap">
-                <svg width="200" height="75" viewBox="0 0 200 75" fill="none">
-                  <circle cx="30" cy="35" r="26" fill="#228731" />
-                  <circle cx="30" cy="35" r="20" fill="#ffffff" />
-                  <text x="30" y="32" fill="#1a1917" fontSize="9" fontWeight="900" fontFamily="Inter, sans-serif" textAnchor="middle">ISO</text>
-                  <text x="30" y="44" fill="#228731" fontSize="11" fontWeight="900" fontFamily="Inter, sans-serif" textAnchor="middle">22000</text>
-                  <text x="68" y="32" fill="#1a1917" fontSize="18" fontWeight="900" fontFamily="Inter, sans-serif">ISO 22000:2018</text>
-                  <text x="68" y="50" fill="#666" fontSize="11" fontWeight="700" fontFamily="Inter, sans-serif">& ISO 9001 Quality</text>
-                </svg>
-              </div>
-              <h3 className="cert-card-title">ISO 22000 & 9001</h3>
-              <p className="cert-card-desc">
-                HACCP-based Food Safety and Quality Management Systems ensuring zero contamination risks from post-harvest wash lines to export container loading.
-              </p>
-              <div className="cert-card-scope-box">
-                <span className="cert-scope-label">System Scope:</span>
-                <div className="cert-scope-tags">
-                  <span className="cert-tag">HACCP Controls</span>
-                  <span className="cert-tag">Quality Audit</span>
-                  <span className="cert-tag">Cold Storage</span>
-                </div>
-              </div>
-            </div>
-
-            {/* CERT 5: KOSHER & HALAL */}
-            <div className="cert-showcase-card">
-              <div className="cert-card-badge-top">
-                <span>Dietary Certification</span>
-              </div>
-              <div className="cert-card-logo-wrap">
-                <svg width="200" height="75" viewBox="0 0 200 75" fill="none">
-                  <circle cx="30" cy="35" r="26" stroke="#228731" strokeWidth="2.5" />
-                  <circle cx="30" cy="35" r="21" stroke="#228731" strokeWidth="1" strokeDasharray="3 2" />
-                  <text x="30" y="40" fill="#228731" fontSize="14" fontWeight="900" fontFamily="Inter, sans-serif" textAnchor="middle">Ⓚ</text>
-                  <text x="68" y="32" fill="#1a1917" fontSize="17" fontWeight="900" fontFamily="Inter, sans-serif">KOSHER & HALAL</text>
-                  <text x="68" y="50" fill="#228731" fontSize="11" fontWeight="700" fontFamily="Inter, sans-serif">100% Pure Agricultural</text>
-                </svg>
-              </div>
-              <h3 className="cert-card-title">KOSHER & HALAL Certified</h3>
-              <p className="cert-card-desc">
-                Guarantees 100% natural, unadulterated produce processed in strict accordance with religious dietary regulations, fully compliant with global retail specifications.
-              </p>
-              <div className="cert-card-scope-box">
-                <span className="cert-scope-label">Compliance:</span>
-                <div className="cert-scope-tags">
-                  <span className="cert-tag">100% Natural</span>
-                  <span className="cert-tag">No Additives</span>
-                  <span className="cert-tag">Pure Produce</span>
-                </div>
-              </div>
-            </div>
-
-            {/* CERT 6: FDA Registered */}
-            <div className="cert-showcase-card">
-              <div className="cert-card-badge-top">
-                <span>U.S. Market Clearance</span>
-              </div>
-              <div className="cert-card-logo-wrap">
-                <svg width="200" height="75" viewBox="0 0 200 75" fill="none">
-                  <rect x="5" y="12" width="48" height="44" rx="8" fill="#003366" />
-                  <text x="13" y="41" fill="#ffffff" fontSize="16" fontWeight="900" fontFamily="Inter, sans-serif">FDA</text>
-                  <text x="62" y="32" fill="#003366" fontSize="17" fontWeight="900" fontFamily="Inter, sans-serif">U.S. FDA Registered</text>
-                  <text x="62" y="50" fill="#666" fontSize="11" fontWeight="700" fontFamily="Inter, sans-serif">Facility Registration</text>
-                </svg>
-              </div>
-              <h3 className="cert-card-title">FDA Facility Registration</h3>
-              <p className="cert-card-desc">
-                Registered under the U.S. Food & Drug Administration Bioterrorism Act, enabling seamless customs clearance and phytosanitary verification for American buyers.
-              </p>
-              <div className="cert-card-scope-box">
-                <span className="cert-scope-label">Regulatory Scope:</span>
-                <div className="cert-scope-tags">
-                  <span className="cert-tag">U.S. Port Clearance</span>
-                  <span className="cert-tag">FSMA Compliant</span>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        {/* 4. FOUR QUALITY PILLARS */}
-        <section className="cert-pillars-section">
-          <div className="cert-pillars-header">
-            <h2 className="cert-pillars-title">The Golden Sun Quality Guarantee</h2>
-            <p className="text-sm text-gray-600 font-medium">How we maintain zero rejection rates across international import terminals</p>
-          </div>
-
-          <div className="cert-pillars-grid">
-            <div className="cert-pillar-item">
-              <div className="cert-pillar-step">01</div>
-              <h3 className="cert-pillar-heading">Pre-Harvest Soil & Water Testing</h3>
-              <p className="cert-pillar-text">Regular multi-residue pesticide tests and heavy metal water checks conducted by ISO 17025 accredited labs.</p>
-            </div>
-
-            <div className="cert-pillar-item">
-              <div className="cert-pillar-step">02</div>
-              <h3 className="cert-pillar-heading">Automated Optical Sorting</h3>
-              <p className="cert-pillar-text">Grading for precise diameter, color calibration, and Brix sugar content to ensure uniform carton packing.</p>
-            </div>
-
-            <div className="cert-pillar-item">
-              <div className="cert-pillar-step">03</div>
-              <h3 className="cert-pillar-heading">Ventilated Export Packaging</h3>
-              <p className="cert-pillar-text">Heavy-duty telescopic export cartons and ozone-treated liners preventing moisture accumulation in transit.</p>
-            </div>
-
-            <div className="cert-pillar-item">
-              <div className="cert-pillar-step">04</div>
-              <h3 className="cert-pillar-heading">Digital Reefer Telematics</h3>
-              <p className="cert-pillar-text">Real-time GPS and temperature monitoring across maritime voyages from Alexandria and Damietta ports.</p>
+            <div className="cert-step-card">
+              <span className="cert-step-num">04</span>
+              <h4 className="cert-step-title">Reefer Telematics</h4>
+              <p className="cert-step-desc">Automated temperature and humidity data loggers installed in every export container.</p>
             </div>
           </div>
         </section>
 
-        {/* 5. BOTTOM CTA CARD */}
-        <div className="cert-cta-card">
-          <div className="cert-cta-content">
-            <h2 className="cert-cta-title">Need Official Batch Documentation for Customs?</h2>
-            <p className="cert-cta-desc">
-              Our export documentation department provides complete phytosanitary certificates, certificates of origin, GlobalGAP audit scopes, and COA analysis for every shipped container.
+        {/* 5. SLIM CTA CARD */}
+        <div className="cert-slim-cta">
+          <div className="cert-cta-left">
+            <div className="flex items-center gap-2 text-amber-300 font-extrabold text-xs uppercase tracking-wider mb-1">
+              <BadgeCheck size={16} />
+              <span>Verified Documentation Available</span>
+            </div>
+            <h3 className="cert-cta-heading">Request Certificate Copies & Lab Test Reports</h3>
+            <p className="cert-cta-sub">
+              Our quality assurance team provides certificate validation documents and pesticide residue test reports upon request.
             </p>
           </div>
-          <div className="cert-cta-buttons">
-            <Link href={`/${locale}/rfq`} className="cert-btn-primary">
-              <span>Request Produce Quote</span>
-              <ArrowRight className="w-4 h-4" />
+
+          <div className="cert-cta-right">
+            <Link href={`/${locale}/rfq`} className="cert-action-btn primary">
+              <span>Submit Commercial Inquiry</span>
+              <ArrowRight size={15} />
             </Link>
-            <Link href={`/${locale}/contact`} className="cert-btn-secondary">
+            <Link href={`/${locale}/contact`} className="cert-action-btn secondary">
               <span>Contact Quality Team</span>
             </Link>
           </div>

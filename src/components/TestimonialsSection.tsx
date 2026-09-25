@@ -22,7 +22,7 @@ const testimonials: Testimonial[] = [
     authorName: 'Muhammed Saeed',
     authorRole: 'Customer of our shop',
     avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80',
-    farmerPhotoUrl: '/farmer_feedback.png',
+    farmerPhotoUrl: '/assets/feedback.jpeg',
   },
   {
     id: 'test-2',
@@ -31,7 +31,7 @@ const testimonials: Testimonial[] = [
     authorName: 'Hans Weber',
     authorRole: 'Import Director - Hamburg',
     avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80',
-    farmerPhotoUrl: '/farmer_feedback.png',
+    farmerPhotoUrl: '/assets/feedback.jpeg',
   },
   {
     id: 'test-3',
@@ -40,7 +40,7 @@ const testimonials: Testimonial[] = [
     authorName: 'Carlos Mendoza',
     authorRole: 'Fresh Produce Buyer - Madrid',
     avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&q=80',
-    farmerPhotoUrl: '/farmer_feedback.png',
+    farmerPhotoUrl: '/assets/feedback.jpeg',
   },
 ];
 
@@ -53,15 +53,20 @@ export function TestimonialsSection({ currentLocale }: { currentLocale: Locale }
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
 
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-2.5">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[#17C548] text-xs font-bold uppercase tracking-wider">
-            <LeafBadgeIcon className="w-4 h-4 text-[#17C548]" />
-            <span>Testimonials</span>
+        <div className="sg-section-header">
+          <div className="sg-section-badge">
+            <LeafBadgeIcon className="w-4 h-4 text-[#228731]" />
+            <span>Client Testimonials</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-gray-900 tracking-tight font-serif">
-            Our Customer Feedback
+          <h2 className="sg-section-title">
+            <span className="sg-section-title-dark">Our Importers </span>
+            <span className="sg-section-title-green">Feedback & Trust</span>
           </h2>
+
+          <p className="sg-section-subtitle">
+            Real experiences from our global produce partners and international supermarket distribution networks.
+          </p>
         </div>
 
         {/* Testimonial Card Container */}
@@ -98,12 +103,12 @@ export function TestimonialsSection({ currentLocale }: { currentLocale: Locale }
                   className="w-11 h-11 rounded-full object-cover border-2 border-white shadow-2xs"
                 />
                 <div>
-                  <span className="text-xs text-gray-400 block font-sans">
+                  <span className="text-xs text-gray-600 block font-sans">
                     {current.authorRole}
                   </span>
-                  <h4 className="font-bold text-gray-900 text-sm sm:text-base font-sans">
+                  <h3 className="font-bold text-gray-900 text-sm sm:text-base font-sans">
                     {current.authorName}
-                  </h4>
+                  </h3>
                 </div>
               </div>
 
@@ -139,13 +144,17 @@ export function TestimonialsSection({ currentLocale }: { currentLocale: Locale }
                 <button
                   key={t.id}
                   onClick={() => setActiveIndex(i)}
-                  className={`h-2.5 rounded-full transition-all cursor-pointer ${
-                    i === activeIndex
-                      ? 'w-6 bg-[#17C548]'
-                      : 'w-2.5 bg-emerald-200 hover:bg-emerald-300'
-                  }`}
+                  className="p-2 flex items-center justify-center cursor-pointer min-w-[36px] min-h-[36px]"
                   aria-label={`Go to slide ${i + 1}`}
-                />
+                >
+                  <span
+                    className={`h-2.5 rounded-full transition-all block ${
+                      i === activeIndex
+                        ? 'w-6 bg-[#15803d]'
+                        : 'w-2.5 bg-emerald-200 hover:bg-emerald-300'
+                    }`}
+                  />
+                </button>
               ))}
             </div>
 

@@ -161,6 +161,29 @@
   transform: translateY(0);
 }
 
+.about-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 13px 24px;
+  background-color: transparent;
+  color: #1b3e2b;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 30px;
+  border: 1.5px solid rgba(27, 62, 43, 0.2);
+  transition: all 0.2s ease;
+}
+
+.about-btn-secondary:hover {
+  border-color: #228731;
+  color: #228731;
+  background-color: rgba(34, 135, 49, 0.06);
+  transform: translateY(-2px);
+}
+
 .about-orange-arrow {
   flex-shrink: 0;
   animation: arrowPulse 2s ease-in-out infinite alternate;

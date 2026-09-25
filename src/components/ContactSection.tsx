@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import { Phone, Mail, MapPin, CheckCircle2 } from 'lucide-react';
+import { LeafBadgeIcon } from '@/components/ui/LeafBadgeIcon';
 import { Locale } from '@/types';
 
 export function ContactSection({ currentLocale }: { currentLocale: Locale }) {
@@ -16,12 +17,28 @@ export function ContactSection({ currentLocale }: { currentLocale: Locale }) {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
+    setIsSubmitting(true);
+    setErrorMessage(null);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to send message. Please try again.');
+      }
+
+      setSubmitted(true);
       setFormData({
         name: '',
         email: '',
@@ -30,7 +47,12 @@ export function ContactSection({ currentLocale }: { currentLocale: Locale }) {
         subject: '',
         message: '',
       });
-    }, 4000);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An error occurred. Please try again.';
+      setErrorMessage(msg);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -38,12 +60,19 @@ export function ContactSection({ currentLocale }: { currentLocale: Locale }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
 
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-2">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-gray-900 tracking-tight font-serif">
-            Contact Us
+        <div className="sg-section-header">
+          <div className="sg-section-badge">
+            <LeafBadgeIcon className="w-4 h-4 text-[#228731]" />
+            <span>Get In Touch</span>
+          </div>
+
+          <h2 className="sg-section-title">
+            <span className="sg-section-title-dark">Contact Our </span>
+            <span className="sg-section-title-green">Export Sales Team</span>
           </h2>
-          <p className="text-gray-400 text-sm sm:text-base font-normal">
-            Any question or remarks, Just write us a message!
+
+          <p className="sg-section-subtitle">
+            Have questions or specific produce inquiries? Reach out to our 24h export logistics desk.
           </p>
         </div>
 
@@ -56,31 +85,31 @@ export function ContactSection({ currentLocale }: { currentLocale: Locale }) {
               <h3 className="font-bold text-xl text-gray-900 mb-1 font-sans">
                 Contact Information
               </h3>
-              <p className="text-xs sm:text-sm text-gray-400 font-normal mb-8">
+              <p className="text-xs sm:text-sm text-gray-600 font-normal mb-8">
                 Say something to start a live chat!
               </p>
 
               <div className="space-y-6 text-xs sm:text-sm text-gray-700 font-sans">
                 <div className="flex items-center gap-3.5">
-                  <div className="w-9 h-9 rounded-lg bg-emerald-50 text-[#23903F] flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-lg bg-emerald-50 text-[#15803d] flex items-center justify-center shrink-0">
                     <Phone className="w-4 h-4" />
                   </div>
-                  <a href="tel:+201287755522" className="hover:text-[#23903F] transition-colors font-medium">
+                  <a href="tel:+201287755522" className="hover:text-[#15803d] transition-colors font-medium">
                     +20 128 775 5522
                   </a>
                 </div>
 
                 <div className="flex items-center gap-3.5">
-                  <div className="w-9 h-9 rounded-lg bg-emerald-50 text-[#23903F] flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-lg bg-emerald-50 text-[#15803d] flex items-center justify-center shrink-0">
                     <Mail className="w-4 h-4" />
                   </div>
-                  <a href="mailto:sales@golden-sun-eg.com" className="hover:text-[#23903F] transition-colors font-medium">
+                  <a href="mailto:sales@golden-sun-eg.com" className="hover:text-[#15803d] transition-colors font-medium">
                     sales@golden-sun-eg.com
                   </a>
                 </div>
 
                 <div className="flex items-start gap-3.5">
-                  <div className="w-9 h-9 rounded-lg bg-emerald-50 text-[#23903F] flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-9 h-9 rounded-lg bg-emerald-50 text-[#15803d] flex items-center justify-center shrink-0 mt-0.5">
                     <MapPin className="w-4 h-4" />
                   </div>
                   <span className="font-medium text-gray-600 leading-snug">
@@ -95,10 +124,10 @@ export function ContactSection({ currentLocale }: { currentLocale: Locale }) {
               <div className="flex items-center gap-2.5 z-10 relative">
                 {/* Facebook */}
                 <a
-                  href="https://facebook.com"
+                  href="https://www.facebook.com/share/1JFz3wGibX/?mibextid=wwXIfr"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-md bg-[#23903F] hover:bg-[#1E7D36] text-white flex items-center justify-center transition-all shadow-2xs hover:scale-105"
+                  className="w-8 h-8 rounded-md bg-[#15803d] hover:bg-[#166534] text-white flex items-center justify-center transition-all shadow-2xs hover:scale-105"
                   aria-label="Facebook"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -106,25 +135,25 @@ export function ContactSection({ currentLocale }: { currentLocale: Locale }) {
                   </svg>
                 </a>
 
-                {/* X (Twitter) */}
+                {/* Instagram */}
                 <a
-                  href="https://x.com"
+                  href="https://www.instagram.com/sungolden2026?stkn=ejd2MHF3cHl4b2Nx&utm_source=qr"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-md bg-[#23903F] hover:bg-[#1E7D36] text-white flex items-center justify-center transition-all shadow-2xs hover:scale-105"
-                  aria-label="X Twitter"
+                  className="w-8 h-8 rounded-md bg-[#15803d] hover:bg-[#166534] text-white flex items-center justify-center transition-all shadow-2xs hover:scale-105"
+                  aria-label="Instagram"
                 >
-                  <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
                   </svg>
                 </a>
 
                 {/* LinkedIn */}
                 <a
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/company/golden-sun-for-export-import/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-md bg-[#23903F] hover:bg-[#1E7D36] text-white flex items-center justify-center transition-all shadow-2xs hover:scale-105"
+                  className="w-8 h-8 rounded-md bg-[#15803d] hover:bg-[#166534] text-white flex items-center justify-center transition-all shadow-2xs hover:scale-105"
                   aria-label="LinkedIn"
                 >
                   <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
@@ -134,11 +163,11 @@ export function ContactSection({ currentLocale }: { currentLocale: Locale }) {
 
                 {/* WhatsApp */}
                 <a
-                  href="https://wa.me/201287755522"
+                  href="https://wa.me/201100603304"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 rounded-md bg-[#23903F] hover:bg-[#1E7D36] text-white flex items-center justify-center transition-all shadow-2xs hover:scale-105"
-                  aria-label="WhatsApp"
+                  className="w-8 h-8 rounded-md bg-[#15803d] hover:bg-[#166534] text-white flex items-center justify-center transition-all shadow-2xs hover:scale-105"
+                  aria-label="Direct WhatsApp Sales Chat"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                     <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-1.16 4.237 4.248-1.111z"/>
@@ -162,7 +191,7 @@ export function ContactSection({ currentLocale }: { currentLocale: Locale }) {
           <div className="order-1 lg:order-2 lg:col-span-7 bg-white rounded-3xl p-6 sm:p-10 border border-gray-100 shadow-md flex flex-col justify-between">
             {submitted ? (
               <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-12">
-                <CheckCircle2 className="w-16 h-16 text-[#23903F] animate-bounce" />
+                <CheckCircle2 className="w-16 h-16 text-[#15803d] animate-bounce" />
                 <h3 className="text-2xl font-bold text-gray-900 font-serif">Message Sent Successfully!</h3>
                 <p className="text-sm text-gray-500 max-w-md">
                   Thank you for reaching out to Golden Sun Export. Our sales manager will contact you within 24 hours.
@@ -182,7 +211,7 @@ export function ContactSection({ currentLocale }: { currentLocale: Locale }) {
                       placeholder="Your Name"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-emerald-200/80 focus:border-[#23903F] focus:ring-2 focus:ring-[#23903F]/20 text-sm outline-none transition-all placeholder:text-gray-300 text-gray-800"
+                      className="w-full px-4 py-3 rounded-lg border border-emerald-200/80 focus:border-[#15803d] focus:ring-2 focus:ring-[#15803d]/20 text-sm outline-none transition-all placeholder:text-gray-400 text-gray-800"
                     />
                   </div>
 
@@ -196,7 +225,7 @@ export function ContactSection({ currentLocale }: { currentLocale: Locale }) {
                       placeholder="Email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-emerald-200/80 focus:border-[#23903F] focus:ring-2 focus:ring-[#23903F]/20 text-sm outline-none transition-all placeholder:text-gray-300 text-gray-800"
+                      className="w-full px-4 py-3 rounded-lg border border-emerald-200/80 focus:border-[#15803d] focus:ring-2 focus:ring-[#15803d]/20 text-sm outline-none transition-all placeholder:text-gray-400 text-gray-800"
                     />
                   </div>
                 </div>
@@ -212,20 +241,20 @@ export function ContactSection({ currentLocale }: { currentLocale: Locale }) {
                       placeholder="Your Mobile Number"
                       value={formData.mobile}
                       onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-emerald-200/80 focus:border-[#23903F] focus:ring-2 focus:ring-[#23903F]/20 text-sm outline-none transition-all placeholder:text-gray-300 text-gray-800"
+                      className="w-full px-4 py-3 rounded-lg border border-emerald-200/80 focus:border-[#15803d] focus:ring-2 focus:ring-[#15803d]/20 text-sm outline-none transition-all placeholder:text-gray-400 text-gray-800"
                     />
                   </div>
 
                   <div>
                     <label className="text-xs font-bold text-gray-700 mb-1.5 block">
-                      Company Name <span className="text-gray-400 font-normal">(optional)</span>
+                      Company Name <span className="text-gray-600 font-normal">(optional)</span>
                     </label>
                     <input
                       type="text"
                       placeholder="Company Name"
                       value={formData.company}
                       onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border border-emerald-200/80 focus:border-[#23903F] focus:ring-2 focus:ring-[#23903F]/20 text-sm outline-none transition-all placeholder:text-gray-300 text-gray-800"
+                      className="w-full px-4 py-3 rounded-lg border border-emerald-200/80 focus:border-[#15803d] focus:ring-2 focus:ring-[#15803d]/20 text-sm outline-none transition-all placeholder:text-gray-400 text-gray-800"
                     />
                   </div>
                 </div>
@@ -260,13 +289,27 @@ export function ContactSection({ currentLocale }: { currentLocale: Locale }) {
                   />
                 </div>
 
+                {errorMessage && (
+                  <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg text-center">
+                    {errorMessage}
+                  </div>
+                )}
+
                 {/* Row 5: Action Row (Centered Button + Hand-drawn Orange Arrow) */}
                 <div className="flex items-center justify-center gap-3 pt-4 relative w-full text-center">
                   <button
                     type="submit"
-                    className="px-8 py-3.5 rounded-full bg-[#23903F] hover:bg-[#1E7D36] text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center"
+                    disabled={isSubmitting}
+                    className="px-8 py-3.5 rounded-full bg-[#23903F] hover:bg-[#1E7D36] disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm sm:text-base shadow-md hover:shadow-lg transition-all cursor-pointer flex items-center justify-center gap-2"
                   >
-                    Send Message
+                    {isSubmitting ? (
+                      <>
+                        <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Sending...</span>
+                      </>
+                    ) : (
+                      'Send Message'
+                    )}
                   </button>
 
                   {/* Hand-drawn Orange Arrow SVG */}

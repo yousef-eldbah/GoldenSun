@@ -15,7 +15,7 @@ export function Hero({ currentLocale }: { currentLocale: Locale }) {
       {/* Background Graphic for Desktop */}
       <div className="hero-bg-wrapper hidden md:block">
         <Image
-          src="/assets/heroSection.svg"
+          src="/assets/banner-1.svg"
           alt="Golden Sun Fresh Produce"
           fill
           priority
@@ -32,7 +32,7 @@ export function Hero({ currentLocale }: { currentLocale: Locale }) {
             <br />
             <span className="hero-title-green">{t('title_highlight')}</span>
             <br />
-            <span className="hero-title-dark text-2xl sm:text-3xl font-serif block mt-1">
+            <span className="hero-title-dark hero-title-sub">
               {t('title_sub')}
             </span>
           </h1>
@@ -90,11 +90,12 @@ export function Hero({ currentLocale }: { currentLocale: Locale }) {
       {/* Mobile Produce Image Arc (Takes full screen width with 0 side gaps) */}
       <div className="hero-mobile-img-wrapper">
         <Image
-          src="/assets/heroMobile.svg"
+          src="/assets/hero-m.svg"
           alt="Fresh Egyptian Produce"
-          width={600}
-          height={400}
+          width={402}
+          height={289}
           priority
+          unoptimized
           className="hero-mobile-img"
         />
       </div>

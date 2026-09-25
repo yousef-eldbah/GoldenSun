@@ -1,0 +1,249 @@
+/* ─── Gallery Section Styles ────────────────────────────────────────── */
+
+.gallery-section-wrapper {
+  position: relative;
+  width: 100%;
+  padding: 3rem 1rem 4.5rem;
+  background-color: var(--sg-white, #fafdfa);
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .gallery-section-wrapper {
+    padding: 4rem 1.5rem 5.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery-section-wrapper {
+    padding: 5rem 2rem 6.5rem;
+  }
+}
+
+.gallery-container {
+  max-width: 1320px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* ─── Top Badge ─────────────────────────────────────────────────────────── */
+.gallery-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #228731;
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
+  margin-bottom: 1.25rem;
+}
+
+.gallery-badge-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  color: #228731;
+  flex-shrink: 0;
+}
+
+/* ─── Green Forest Card Banner ──────────────────────────────────────────── */
+.gallery-banner-card {
+  position: relative;
+  background: radial-gradient(circle at 80% 20%, #175225 0%, #0c3815 60%, #08280e 100%);
+  border-radius: 28px;
+  padding: 2.75rem 2rem 6.5rem;
+  color: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 20px 45px -15px rgba(12, 56, 21, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (min-width: 768px) {
+  .gallery-banner-card {
+    border-radius: 36px;
+    padding: 3.25rem 3.5rem 8.5rem;
+  }
+}
+
+/* Topographic Contour Background Effect */
+.gallery-banner-topo {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+  pointer-events: none;
+  background-image: radial-gradient(ellipse 70% 50% at 50% 50%, transparent 20%, rgba(0, 0, 0, 0.3) 100%),
+    repeating-radial-gradient(circle at 20% 30%, transparent 0, transparent 20px, rgba(255, 255, 255, 0.25) 21px, transparent 22px, transparent 40px),
+    repeating-radial-gradient(circle at 80% 70%, transparent 0, transparent 30px, rgba(255, 255, 255, 0.2) 31px, transparent 32px, transparent 60px);
+  background-size: cover;
+  mix-blend-mode: overlay;
+}
+
+.gallery-banner-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+@media (min-width: 640px) {
+  .gallery-banner-header {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.gallery-banner-title {
+  font-family: var(--font-vidaloka), serif;
+  font-size: 1.85rem;
+  line-height: 1.25;
+  font-weight: 400;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .gallery-banner-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery-banner-title {
+    font-size: 2.85rem;
+  }
+}
+
+.gallery-see-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #f3ba2f;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0.4rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(243, 186, 47, 0.08);
+  border: 1px solid rgba(243, 186, 47, 0.2);
+}
+
+.gallery-see-more-btn:hover {
+  color: #ffd866;
+  background: rgba(243, 186, 47, 0.18);
+  transform: translateX(4px);
+  border-color: rgba(243, 186, 47, 0.4);
+}
+
+.gallery-see-more-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.gallery-see-more-btn:hover svg {
+  transform: translateX(3px);
+}
+
+/* ─── Cards Grid Overlapping Banner ─────────────────────────────────────── */
+.gallery-cards-grid {
+  position: relative;
+  z-index: 10;
+  margin-top: -4.5rem;
+  padding: 0 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .gallery-cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: -5.5rem;
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .gallery-cards-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-top: -6.5rem;
+    gap: 1.5rem;
+  }
+}
+
+/* ─── Gallery Card ──────────────────────────────────────────────────────── */
+.gallery-card {
+  position: relative;
+  text-decoration: none;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  display: block;
+}
+
+.gallery-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px -12px rgba(12, 56, 21, 0.3), 0 0 0 2px rgba(243, 186, 47, 0.4);
+}
+
+.gallery-card-img-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3.4;
+  overflow: hidden;
+  background: #0c3815;
+}
+
+.gallery-card-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: transform 0.5s ease;
+}
+
+.gallery-card:hover .gallery-card-img {
+  transform: scale(1.06);
+}
+
+/* Floating Bottom Text Card - Subtle & smooth on hover */
+.gallery-card-floating-badge {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 14px;
+  padding: 0.55rem 0.85rem;
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.15);
+  z-index: 5;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.gallery-card:hover .gallery-card-floating-badge {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.gallery-card-sub {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #64748b;
+  margin-bottom: 0.1rem;
+}
+
+.gallery-card-title {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.25;
+}

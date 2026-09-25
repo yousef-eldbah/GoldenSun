@@ -8,18 +8,27 @@ import { Leaf, Sun, CheckCircle2, Plus, ArrowRight, Sparkles, ShieldCheck, Sprou
 import { useRFQBasket } from '@/context/RFQBasketContext';
 import { Product, Locale } from '@/types';
 import { Badge } from '@/components/ui/Badge';
+import { LeafBadgeIcon } from '@/components/ui/LeafBadgeIcon';
+import { ProductSkeleton } from '@/components/ui/ProductSkeleton';
 import { useProducts } from '@/hooks/useProducts';
 
-export function ProductCatalog({ currentLocale }: { currentLocale: Locale }) {
+interface ProductCatalogProps {
+  currentLocale: Locale;
+  initialProducts?: Product[];
+}
+
+export function ProductCatalog({ currentLocale, initialProducts }: ProductCatalogProps) {
   const t = useTranslations('products');
   const { addItem } = useRFQBasket();
-  const { products: liveProducts, isLoading } = useProducts();
+  const { products: liveProducts, isLoading: isHookLoading } = useProducts();
 
   const [activeTab, setActiveTab] = useState<'all' | 'cat-vegetables' | 'cat-fruits'>('all');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Use ONLY live products from Database (Supabase) and Admin Dashboard
-  const allProducts = liveProducts || [];
+  // If initialProducts was passed by server component, use it; otherwise use hook result
+  const hasInitial = Boolean(initialProducts && initialProducts.length > 0);
+  const allProducts = hasInitial ? (initialProducts as Product[]) : (liveProducts || []);
+  const isLoading = hasInitial ? false : isHookLoading;
 
   const handleQuickAdd = (product: Product, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -160,20 +169,21 @@ export function ProductCatalog({ currentLocale }: { currentLocale: Locale }) {
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/70 text-[#1b4327] text-xs font-bold uppercase tracking-wider mb-1">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
-            Direct Egyptian Farms
+        <div className="sg-section-header">
+          <div className="sg-section-badge">
+            <LeafBadgeIcon className="w-4 h-4 text-[#228731]" />
+            <span>Our Produce Catalog</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-[#1a3826] tracking-tight font-serif">
-            Our <span className="text-[#258746]">Organic</span> Products
+          <h2 className="sg-section-title">
+            <span className="sg-section-title-dark">Our Fresh </span>
+            <span className="sg-section-title-green">Agricultural Products</span>
           </h2>
 
-          <p className="text-sm sm:text-base text-gray-600 font-medium max-w-2xl mx-auto">
-            Grade A fresh fruits and frozen vegetables harvested from solar-rich farms. Premium Quality, Naturally Fresh.
+          <p className="sg-section-subtitle">
+            Grade A fresh fruits and vegetables harvested from solar-rich certified Egyptian farms.
           </p>
         </div>
 
@@ -215,9 +225,7 @@ export function ProductCatalog({ currentLocale }: { currentLocale: Locale }) {
 
         {/* Dynamic Database Content or Empty State */}
         {isLoading ? (
-          <div className="py-16 text-center text-sm font-medium text-emerald-800 animate-pulse">
-            Loading fresh agricultural produce...
-          </div>
+          <ProductSkeleton count={6} />
         ) : allProducts.length === 0 ? (
           <div className="text-center py-16 px-4 bg-white rounded-3xl border border-dashed border-emerald-300 max-w-md mx-auto">
             <Leaf className="w-12 h-12 text-emerald-500 mx-auto mb-3 opacity-60" />
@@ -238,8 +246,8 @@ export function ProductCatalog({ currentLocale }: { currentLocale: Locale }) {
             {/* SECTION 1: VEGETABLES (Displayed FIRST) */}
             {(activeTab === 'all' || activeTab === 'cat-vegetables') && vegetableProducts.length > 0 && (
               <div className="space-y-6 pt-4">
-                <div className="flex items-center gap-2 text-xl sm:text-2xl font-black text-[#1b4327]">
-                  <Leaf className="w-6 h-6 text-[#258746] fill-[#258746]" />
+                <div className="flex items-center gap-2.5 text-xl sm:text-2xl font-black text-[#1b4327]">
+                  <LeafBadgeIcon className="w-8 h-6 text-[#17C548]" />
                   <span>Vegetables</span>
                 </div>
 
@@ -252,8 +260,8 @@ export function ProductCatalog({ currentLocale }: { currentLocale: Locale }) {
             {/* SECTION 2: FRUITS (Displayed SECOND) */}
             {(activeTab === 'all' || activeTab === 'cat-fruits') && fruitProducts.length > 0 && (
               <div className="space-y-6 pt-8">
-                <div className="flex items-center gap-2 text-xl sm:text-2xl font-black text-[#1b4327]">
-                  <Leaf className="w-6 h-6 text-[#258746] fill-[#258746]" />
+                <div className="flex items-center gap-2.5 text-xl sm:text-2xl font-black text-[#1b4327]">
+                  <LeafBadgeIcon className="w-8 h-6 text-[#17C548]" />
                   <span>Fruits</span>
                 </div>
 

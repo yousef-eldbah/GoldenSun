@@ -1,9 +1,11 @@
 import React from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Locale } from '@/types';
+import { LeafBadgeIcon } from '@/components/ui/LeafBadgeIcon';
+import { ArrowRight } from 'lucide-react';
 import './whyChoose.css';
-
 
 const whySeo = {
   en: {
@@ -22,7 +24,7 @@ const whySeo = {
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const resolvedParams = await params;
-  const locale = (resolvedParams.locale as Locale) || 'en';
+  const locale = (resolvedParams?.locale as Locale) || 'en';
   const seo = whySeo[locale] || whySeo.en;
 
   return {
@@ -47,7 +49,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function WhyChoosePage({ params }: { params: Promise<{ locale: string }> }) {
   const resolvedParams = await params;
-  const locale = resolvedParams.locale as Locale;
+  const locale = (resolvedParams?.locale || 'en') as Locale;
+  setRequestLocale(locale);
   const tWhy = await getTranslations({ locale, namespace: 'why_choose' });
   const tCert = await getTranslations({ locale, namespace: 'certificates_section' });
 
@@ -56,11 +59,11 @@ export default async function WhyChoosePage({ params }: { params: Promise<{ loca
       <div className="why-page-container">
         {/* Title */}
         <h1 className="why-main-title">
-          <span className="why-title-dark">Why Choose </span>
-          <span className="why-title-green">GOLDEN SUN</span>
+          <span className="why-title-dark">{tWhy('title_part1')}</span>
+          <span className="why-title-green">{tWhy('title_part2')}</span>
         </h1>
 
-        {/* Banner Card (why-sec.svg) with Text Overlay */}
+        {/* Banner Card with Text Overlay */}
         <div className="why-banner-card">
           <Image
             src="/assets/about-new.svg"
@@ -71,34 +74,14 @@ export default async function WhyChoosePage({ params }: { params: Promise<{ loca
           />
           <div className="why-banner-overlay">
             <span className="why-banner-overlay-text font-serif">
-              THE TRUSTED PARTNER BEHIND YOUR SUCCESS
+              {tWhy('banner_text')}
             </span>
           </div>
         </div>
 
         {/* Badge */}
         <div className="why-badge">
-          <svg
-            width="20"
-            height="13"
-            viewBox="0 0 24 15"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="why-badge-icon"
-          >
-            <path
-              d="M0 0C0 0 16.723 0.154976 15.7773 12.9182C14.2767 11.1692 11.2856 8.00332 7.44157 5.57908C7.44157 5.57908 12.9611 10.9257 14.8831 14.8333L14.842 14.8665C14.8523 14.8775 4.26553 17.4014 0 0Z"
-              fill="#228731"
-            />
-            <path
-              d="M24 6.34296C24 6.34296 15.3765 7.52737 16.5893 14.0474C17.2677 13.0511 18.6347 11.2135 20.4746 9.70815C20.4746 9.70815 17.9255 12.8297 17.1546 14.9773L17.1751 14.9883C17.1855 14.9883 22.7871 15.5971 24 6.34296Z"
-              fill="#228731"
-            />
-            <path
-              d="M19.1594 2.65631C19.1594 2.65631 14.637 4.992 16.3946 8.32395C16.6002 7.63762 17.0319 6.3757 17.7925 5.19124C17.7925 5.19124 16.9188 7.40517 16.8674 8.72242H16.888C16.8777 8.73352 20.0537 7.96972 19.1594 2.65631Z"
-              fill="#228731"
-            />
-          </svg>
+          <LeafBadgeIcon className="w-5 h-4 text-[#228731]" />
           <span>{tWhy('badge')}</span>
         </div>
 
@@ -138,11 +121,12 @@ export default async function WhyChoosePage({ params }: { params: Promise<{ loca
             </div>
             <div className="why-block-img-wrapper">
               <Image
-                src="/assets/why2.svg"
+                src="/assets/ss.png"
                 alt={tWhy('item2_title')}
                 width={520}
                 height={380}
-                className="why-block-img"
+                className="why-block-img why-block-img-curve"
+                unoptimized
               />
             </div>
           </div>
@@ -172,41 +156,32 @@ export default async function WhyChoosePage({ params }: { params: Promise<{ loca
         {/* Certificates Section */}
         <section id="certificates" className="why-cert-section">
           <div className="why-badge">
-            <svg
-              width="20"
-              height="13"
-              viewBox="0 0 24 15"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="why-badge-icon"
-            >
-              <path d="M0 0C0 0 16.723 0.154976 15.7773 12.9182C14.2767 11.1692 11.2856 8.00332 7.44157 5.57908C7.44157 5.57908 12.9611 10.9257 14.8831 14.8333L14.842 14.8665C14.8523 14.8775 4.26553 17.4014 0 0Z" fill="#228731" />
-              <path d="M24 6.34296C24 6.34296 15.3765 7.52737 16.5893 14.0474C17.2677 13.0511 18.6347 11.2135 20.4746 9.70815C20.4746 9.70815 17.9255 12.8297 17.1546 14.9773L17.1751 14.9883C17.1855 14.9883 22.7871 15.5971 24 6.34296Z" fill="#228731" />
-              <path d="M19.1594 2.65631C19.1594 2.65631 14.637 4.992 16.3946 8.32395C16.6002 7.63762 17.0319 6.3757 17.7925 5.19124C17.7925 5.19124 16.9188 7.40517 16.8674 8.72242H16.888C16.8777 8.73352 20.0537 7.96972 19.1594 2.65631Z" fill="#228731" />
-            </svg>
+            <LeafBadgeIcon className="w-5 h-4 text-[#228731]" />
             <span>{tCert('badge')}</span>
           </div>
 
           <div className="why-cert-cards">
+            {/* Cert 1: GLOBALG.A.P. */}
             <div className="why-cert-card why-cert-card-normal">
               <div className="why-cert-card-content">
                 <h3 className="why-cert-card-title">{tCert('cert1_title')}</h3>
                 <p className="why-cert-card-desc">{tCert('cert1_desc')}</p>
               </div>
               <div className="why-cert-card-logo">
-                <svg width="220" height="110" viewBox="0 0 220 110" fill="none">
-                  <path d="M60 20C37.9 20 20 37.9 20 60C20 82.1 37.9 100 60 100C75.2 100 88.4 91.5 95 79H60V62H118C119.3 67.8 120 73.8 120 80C120 113.1 93.1 140 60 140C26.9 140 0 113.1 0 80C0 46.9 26.9 20 60 20Z" fill="#228731" transform="scale(0.55)" />
-                  <text x="85" y="72" fill="#228731" fontSize="22" fontWeight="900" fontFamily="Inter, sans-serif" letterSpacing="0.05em">GLOBALG.A.P.</text>
+                <svg width="220" height="90" viewBox="0 0 220 90" fill="none">
+                  <path d="M60 20C37.9 20 20 37.9 20 60C20 82.1 37.9 100 60 100C75.2 100 88.4 91.5 95 79H60V62H118C119.3 67.8 120 73.8 120 80C120 113.1 93.1 140 60 140C26.9 140 0 113.1 0 80C0 46.9 26.9 20 60 20Z" fill="#228731" transform="scale(0.5)" />
+                  <text x="75" y="60" fill="#228731" fontSize="22" fontWeight="900" fontFamily="Inter, sans-serif" letterSpacing="0.04em">GLOBALG.A.P.</text>
                 </svg>
               </div>
             </div>
 
+            {/* Cert 2: GRASP */}
             <div className="why-cert-card why-cert-card-reverse">
               <div className="why-cert-card-logo">
-                <svg width="200" height="120" viewBox="0 0 200 120" fill="none">
-                  <path d="M30 45C30 38 35 32 42 32C49 32 54 38 54 45V65H58V35C58 28 63 22 70 22C77 22 82 28 82 35V65H86V40C86 33 91 27 98 27C105 27 110 33 110 40V75C110 95 95 110 75 110C55 110 30 95 30 75V45Z" fill="#0080FF" transform="scale(0.65)" />
-                  <text x="15" y="88" fill="#0080FF" fontSize="16" fontWeight="800" fontFamily="Inter, sans-serif">GLOBALG.A.P.</text>
-                  <text x="35" y="108" fill="#0080FF" fontSize="20" fontWeight="900" fontFamily="Inter, sans-serif">GRASP</text>
+                <svg width="200" height="90" viewBox="0 0 200 90" fill="none">
+                  <path d="M30 45C30 38 35 32 42 32C49 32 54 38 54 45V65H58V35C58 28 63 22 70 22C77 22 82 28 82 35V65H86V40C86 33 91 27 98 27C105 27 110 33 110 40V75C110 95 95 110 75 110C55 110 30 95 30 75V45Z" fill="#228731" transform="scale(0.55)" />
+                  <text x="65" y="42" fill="#228731" fontSize="14" fontWeight="800" fontFamily="Inter, sans-serif">GLOBALG.A.P.</text>
+                  <text x="65" y="66" fill="#228731" fontSize="22" fontWeight="900" fontFamily="Inter, sans-serif">GRASP</text>
                 </svg>
               </div>
               <div className="why-cert-card-content">
@@ -215,33 +190,26 @@ export default async function WhyChoosePage({ params }: { params: Promise<{ loca
               </div>
             </div>
 
+            {/* Cert 3: SEDEX */}
             <div className="why-cert-card why-cert-card-normal">
               <div className="why-cert-card-content">
                 <h3 className="why-cert-card-title">{tCert('cert3_title')}</h3>
                 <p className="why-cert-card-desc">{tCert('cert3_desc')}</p>
               </div>
               <div className="why-cert-card-logo">
-                <svg width="180" height="120" viewBox="0 0 180 120" fill="none">
-                  <circle cx="90" cy="60" r="52" stroke="#228731" strokeWidth="4" strokeDasharray="6 4" />
-                  <circle cx="90" cy="60" r="44" stroke="#228731" strokeWidth="2" />
-                  <rect x="20" y="45" width="140" height="30" rx="4" fill="#228731" transform="rotate(-8 90 60)" />
-                  <text x="90" y="66" fill="#ffffff" fontSize="18" fontWeight="900" fontFamily="Inter, sans-serif" textAnchor="middle" transform="rotate(-8 90 60)">KOSHER</text>
-                  <text x="90" y="24" fill="#228731" fontSize="10" fontWeight="800" fontFamily="Inter, sans-serif" textAnchor="middle">CERTIFIED</text>
-                  <text x="90" y="104" fill="#228731" fontSize="10" fontWeight="800" fontFamily="Inter, sans-serif" textAnchor="middle">CERTIFIED</text>
+                <svg width="180" height="70" viewBox="0 0 180 70" fill="none">
+                  <text x="15" y="48" fill="#1b1b1b" fontSize="32" fontWeight="900" fontFamily="Inter, sans-serif" letterSpacing="-0.02em">Sedex</text>
+                  <circle cx="100" cy="24" r="7.5" fill="#e51b24" />
                 </svg>
               </div>
             </div>
 
+            {/* Cert 4: BRCGS Food Safety */}
             <div className="why-cert-card why-cert-card-reverse">
               <div className="why-cert-card-logo">
-                <svg width="160" height="140" viewBox="0 0 160 140" fill="none">
-                  <circle cx="80" cy="70" r="58" fill="#228731" />
-                  <circle cx="80" cy="70" r="46" fill="#ffffff" />
-                  <text x="80" y="55" fill="#1a1917" fontSize="14" fontWeight="900" fontFamily="Inter, sans-serif" textAnchor="middle">ISO</text>
-                  <text x="80" y="76" fill="#1a1917" fontSize="22" fontWeight="900" fontFamily="Inter, sans-serif" textAnchor="middle">9001</text>
-                  <text x="80" y="92" fill="#228731" fontSize="9" fontWeight="800" fontFamily="Inter, sans-serif" textAnchor="middle">CERTIFIED</text>
-                  <circle cx="80" cy="115" r="14" fill="#228731" />
-                  <path d="M74 115L78 119L86 111" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                <svg width="190" height="70" viewBox="0 0 190 70" fill="none">
+                  <text x="10" y="38" fill="#388e3c" fontSize="28" fontWeight="900" fontFamily="Inter, sans-serif" letterSpacing="0.02em">BRCGS</text>
+                  <text x="12" y="58" fill="#333333" fontSize="13" fontWeight="700" fontFamily="Inter, sans-serif">Food Safety</text>
                 </svg>
               </div>
               <div className="why-cert-card-content">
@@ -250,7 +218,36 @@ export default async function WhyChoosePage({ params }: { params: Promise<{ loca
               </div>
             </div>
           </div>
+
+          {/* Link to full certificates page */}
+          <div style={{ textAlign: 'center', marginTop: '32px', paddingBottom: '8px' }}>
+            <Link
+              href={`/${locale}/certificates`}
+              className="why-cert-cta-btn"
+            >
+              <LeafBadgeIcon className="w-4 h-4 text-[#228731]" />
+              <span>View Full Accreditation Details & Standards</span>
+              <ArrowRight size={16} />
+            </Link>
+          </div>
         </section>
+
+        {/* Process CTA Banner */}
+        <section className="why-process-cta">
+          <div className="why-process-cta-inner">
+            <div>
+              <p className="why-process-cta-label">Step-by-step from farm to port</p>
+              <h2 className="why-process-cta-title">See How We Export</h2>
+              <p className="why-process-cta-desc">
+                Understand our full export process — from farm-gate harvest and cold-chain handling to phytosanitary clearance and container loading.
+              </p>
+            </div>
+            <Link href={`/${locale}/process`} className="why-process-cta-btn">
+              Our Export Process <ArrowRight size={18} />
+            </Link>
+          </div>
+        </section>
+
       </div>
     </main>
   );

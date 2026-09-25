@@ -3,11 +3,15 @@ import { Hero } from '@/components/Hero';
 import { AboutSection } from '@/components/AboutSection';
 import { WhyChooseSection } from '@/components/WhyChooseSection';
 import { ProductCatalog } from '@/components/ProductCatalog';
+import { SeasonalCalendarSection } from '@/components/SeasonalCalendarSection';
 import { ExportMarketsMap } from '@/components/ExportMarketsMap';
 import { TestimonialsSection } from '@/components/TestimonialsSection';
 import { CertificatesSlider } from '@/components/CertificatesSlider';
+import { GallerySection } from '@/components/GallerySection';
 import { ContactSection } from '@/components/ContactSection';
-import { Locale } from '@/types';
+import { setRequestLocale } from 'next-intl/server';
+import { Locale, Product } from '@/types';
+import { services } from '@/services';
 
 const seoByLocale = {
   en: {
@@ -38,6 +42,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         en: 'https://sungolden-eg.com/en',
         de: 'https://sungolden-eg.com/de',
         es: 'https://sungolden-eg.com/es',
+        'x-default': 'https://sungolden-eg.com/en',
       },
     },
     openGraph: {
@@ -53,71 +58,47 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const resolvedParams = await params;
-  const locale = resolvedParams.locale as Locale;
+  const locale = (resolvedParams?.locale || 'en') as Locale;
+  setRequestLocale(locale);
 
-  const organizationSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Corporation',
-    name: 'Golden Sun for Agricultural Export & Development',
-    alternateName: 'Golden Sun Egypt',
-    url: 'https://sungolden-eg.com',
-    logo: 'https://sungolden-eg.com/assets/Frame%20160.svg',
-    description: 'Leading Egyptian agricultural produce exporter supplying fresh fruits, Valencia oranges, IQF strawberries, garlic and vegetables to global ports.',
-    address: {
-      '@type': 'PostalAddress',
-      streetAddress: 'Kasab Pedestrian Village, Badreshin Center',
-      addressLocality: 'Giza',
-      addressCountry: 'EG',
-    },
-    contactPoint: [
-      {
-        '@type': 'ContactPoint',
-        telephone: '+20-128-775-5522',
-        contactType: 'sales',
-        areaServed: ['EU', 'GB', 'DE', 'ES', 'NL', 'SA', 'RU', 'US'],
-        availableLanguage: ['English', 'German', 'Spanish', 'Arabic'],
-      },
-    ],
-    areaServed: [
-      { '@type': 'Country', name: 'Germany' },
-      { '@type': 'Country', name: 'Netherlands' },
-      { '@type': 'Country', name: 'United Kingdom' },
-      { '@type': 'Country', name: 'Spain' },
-      { '@type': 'Country', name: 'Saudi Arabia' },
-    ],
-  };
+  let products: Product[] = [];
+  try {
+    products = await services.productRepository.getAll();
+  } catch (err) {
+    console.warn('[homepage] Failed to load products repository:', err);
+  }
 
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
-      />
-      <main className="bg-[var(--sg-white)]">
-        {/* 1. Hero Section */}
-        <Hero currentLocale={locale} />
+    <main className="bg-[var(--sg-white)]">
+      {/* 1. Hero Section */}
+      <Hero currentLocale={locale} />
 
-        {/* 2. About Us Section */}
-        <AboutSection currentLocale={locale} />
+      {/* 2. About Us Section */}
+      <AboutSection currentLocale={locale} />
 
-        {/* 3. Why Choose Us Preview Section */}
-        <WhyChooseSection currentLocale={locale} />
+      {/* 3. Why Choose Us Preview Section */}
+      <WhyChooseSection currentLocale={locale} />
 
-        {/* 4. Product Catalog Section */}
-        <ProductCatalog currentLocale={locale} />
+      {/* 4. Product Catalog Section */}
+      <ProductCatalog currentLocale={locale} initialProducts={products} />
 
-        {/* 5. Where Golden Sun Exports Section */}
-        <ExportMarketsMap currentLocale={locale} />
+      {/* 5. Seasonal Calendar Dot Matrix Section */}
+      <SeasonalCalendarSection currentLocale={locale} initialProducts={products} />
 
-        {/* 6. Certificates & Accreditations Infinite Marquee Slider */}
-        <CertificatesSlider currentLocale={locale} />
+      {/* 5. Where Golden Sun Exports Section */}
+      <ExportMarketsMap currentLocale={locale} />
 
-        {/* 7. Testimonials & Customer Feedback Section */}
-        <TestimonialsSection currentLocale={locale} />
+      {/* 6. Certificates & Accreditations Infinite Marquee Slider */}
+      <CertificatesSlider currentLocale={locale} />
 
-        {/* 8. Contact Us Section */}
-        <ContactSection currentLocale={locale} />
-      </main>
-    </>
+      {/* 7. Inside Our Farming Gallery Section */}
+      <GallerySection currentLocale={locale} />
+
+      {/* 8. Testimonials & Customer Feedback Section */}
+      <TestimonialsSection currentLocale={locale} />
+
+      {/* 9. Contact Us Section */}
+      <ContactSection currentLocale={locale} />
+    </main>
   );
 }

@@ -1,8 +1,8 @@
 import { MetadataRoute } from 'next';
-import { mockProducts } from '@/lib/mockData';
+import { services } from '@/services';
 import { locales } from '@/i18n/config';
 
-const baseUrl = 'https://sungolden-eg.com';
+const baseUrl = 'https://goldensun-eg.com';
 
 const pages = [
   '',
@@ -14,13 +14,22 @@ const pages = [
   '/markets',
   '/contact',
   '/rfq',
-  '/tools',
+  '/gallery',
+  '/tools/calculator',
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const routes: MetadataRoute.Sitemap = [];
 
-  // Static Pages for each locale
+  // Fetch actual products from repository (live database or mock fallback)
+  let liveProducts: any[] = [];
+  try {
+    liveProducts = await services.productRepository.getAll();
+  } catch (err) {
+    console.error('Failed to load products for sitemap:', err);
+  }
+
+  // Generate routes for each supported locale
   locales.forEach((locale) => {
     pages.forEach((page) => {
       routes.push({
@@ -31,13 +40,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       });
     });
 
-    // Product detail pages for each locale
-    mockProducts.forEach((prod) => {
+    // Dynamic Product detail pages
+    liveProducts.forEach((prod) => {
       routes.push({
         url: `${baseUrl}/${locale}/products/${prod.slug}`,
         lastModified: new Date(),
-        changeFrequency: 'monthly',
-        priority: 0.7,
+        changeFrequency: 'weekly',
+        priority: 0.9,
       });
     });
   });

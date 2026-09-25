@@ -122,30 +122,30 @@ export function ExportMarketsMap({ currentLocale }: { currentLocale: Locale }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
 
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-2.5">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[#17C548] text-xs font-bold uppercase tracking-wider">
-            <LeafBadgeIcon className="w-4 h-4 text-[#17C548]" />
-            <span>OUR EXPORT MARKETS</span>
+        <div className="sg-section-header">
+          <div className="sg-section-badge">
+            <LeafBadgeIcon className="w-4 h-4 text-[#228731]" />
+            <span>Our Export Markets</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal text-gray-900 tracking-tight font-serif">
-            Where Golden Sun Exports
+          <h2 className="sg-section-title">
+            <span className="sg-section-title-dark">Where Golden Sun </span>
+            <span className="sg-section-title-green">Exports Worldwide</span>
           </h2>
 
-          <p className="text-gray-400 text-sm sm:text-base font-normal">
-            Growing Trust. Delivering Excellence Worldwide.
+          <p className="sg-section-subtitle">
+            Connecting Egyptian harvests with premium import markets across the EU, UK, and GCC.
           </p>
         </div>
 
-        {/* Map Graphic Container (Clean, Flat, No Shadow) */}
-        <div className="max-w-6xl mx-auto flex items-center justify-center py-2 border-0 bg-transparent shadow-none">
+        {/* Map Graphic Container */}
+        <div className="max-w-6xl mx-auto flex items-center justify-center py-2 bg-transparent shadow-none border-0">
           <Image
             src="/assets/map.svg"
             width={1200}
             height={600}
             alt="Where Golden Sun Exports Map"
             className="w-full h-auto object-contain max-h-[550px] shadow-none border-0"
-            loading="lazy"
           />
         </div>
 

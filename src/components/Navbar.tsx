@@ -32,10 +32,23 @@ export function Navbar({ currentLocale }: { currentLocale: Locale }) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const changeLocale = (newLocale: Locale) => {
-    setIsLangOpen(false);
-    const newPathname = pathname.replace(`/${currentLocale}`, `/${newLocale}`);
-    router.push(newPathname);
+  const getLocalePath = (newLocale: Locale) => {
+    return pathname.replace(`/${currentLocale}`, `/${newLocale}`);
+  };
+
+  // Prefetch alternate languages immediately on dropdown interaction
+  const toggleLangDropdown = () => {
+    setIsLangOpen((prev) => {
+      const next = !prev;
+      if (next) {
+        locales.forEach((loc) => {
+          if (loc !== currentLocale) {
+            router.prefetch(getLocalePath(loc));
+          }
+        });
+      }
+      return next;
+    });
   };
 
   const navLinks = [
@@ -44,7 +57,7 @@ export function Navbar({ currentLocale }: { currentLocale: Locale }) {
     { href: `/${currentLocale}/about`, label: t('about') },
     { href: `/${currentLocale}/why-choose`, label: t('why_choose') },
     { href: `/${currentLocale}/certificates`, label: t('certificates') },
-    { href: `/${currentLocale}/contact`, label: t('contact') },
+    { href: `/${currentLocale}#contact`, label: t('contact') },
   ];
 
   const isActive = (href: string) => {
@@ -90,9 +103,19 @@ export function Navbar({ currentLocale }: { currentLocale: Locale }) {
         {/* Right Side: Language + CTA */}
         <div className="navbar-actions">
           {/* Language Selector */}
-          <div className="navbar-lang-wrapper" ref={langRef}>
+          <div
+            className="navbar-lang-wrapper"
+            ref={langRef}
+            onMouseEnter={() => {
+              locales.forEach((loc) => {
+                if (loc !== currentLocale) {
+                  router.prefetch(getLocalePath(loc));
+                }
+              });
+            }}
+          >
             <button
-              onClick={() => setIsLangOpen(!isLangOpen)}
+              onClick={toggleLangDropdown}
               className="navbar-lang-btn"
               aria-label="Select Language"
               aria-expanded={isLangOpen}
@@ -108,14 +131,16 @@ export function Navbar({ currentLocale }: { currentLocale: Locale }) {
             {isLangOpen && (
               <div className="navbar-lang-dropdown">
                 {locales.map((loc) => (
-                  <button
+                  <Link
                     key={loc}
-                    onClick={() => changeLocale(loc)}
+                    href={getLocalePath(loc)}
+                    prefetch={true}
+                    onClick={() => setIsLangOpen(false)}
                     className={`navbar-lang-option ${currentLocale === loc ? 'navbar-lang-option--active' : ''}`}
                   >
                     <FlagIcon locale={loc} />
                     <span className="navbar-lang-option-name">{localeNames[loc]}</span>
-                  </button>
+                  </Link>
                 ))}
               </div>
             )}
