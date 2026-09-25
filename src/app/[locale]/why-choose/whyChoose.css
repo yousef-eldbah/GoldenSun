@@ -409,6 +409,15 @@
     border-radius: 16px;
   }
 
+  .why-banner-overlay {
+    padding: 14px 18px;
+  }
+
+  .why-banner-overlay-text {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
   .why-main-title {
     font-size: 26px;
   }
@@ -423,5 +432,34 @@
 
   .why-cert-card {
     padding: 20px 24px;
+  }
+
+  .why-process-cta {
+    padding: 28px 20px;
+    border-radius: 18px;
+    margin-top: 36px;
+  }
+
+  .why-process-cta-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .why-process-cta-title {
+    font-size: 22px;
+    line-height: 1.25;
+  }
+
+  .why-process-cta-desc {
+    font-size: 13.5px;
+    line-height: 1.55;
+  }
+
+  .why-process-cta-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 12px 20px;
+    font-size: 14px;
   }
 }
